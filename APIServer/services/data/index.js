@@ -1,5 +1,5 @@
 /*
-    default service and temptate you can use.
+    The actual data service...
     
 */
 const MySQLDataModel = {

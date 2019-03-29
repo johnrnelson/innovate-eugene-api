@@ -63,12 +63,17 @@ Get and ID and PASSWORD from a system admin. Open an issue on github if need be.
 
 
 ## TODO
-This is quick running to do list of items that should be moved to the github issues list.
+This is quick running to do list of items that should be moved to the github issues list. 
+However it would seem as only the people actually using the code are the ones doing the 
+todo list. :-)
 
 - [x] Update Issues!
 - [%] Document API
 - [?] Build SQL tables 
 - [%] Sync Airtable data  
+- [$] External Documentation
+- [%] Self discovery 
+- [?] Self documenting documentation
 
 
 # Testing the API

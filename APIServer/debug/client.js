@@ -291,43 +291,43 @@ const DebugUI = {
     },
     //Pop a window to show the code!
     ExportCode(TypeOfCode) {
+
+        /*
+            Define the languages supported and how to help...
+        */
         const languages_supported = {
             'curl': {
                 code: `curl --request GET --data '{ "service": "data", "view": "AllAssets" }' http://localhost:9118/api`,
                 help: 'Check out the man page for curl for more information.',
             },
             'javascript-fetch': {
-                code: ``,
+                code: `** SAMPLE CODE **`,
                 help: 'You can use xhr but I guess fetch is the new thing.',
             },
             'javascript-http-request': {
-                code: ``,
+                code: `** SAMPLE CODE **`,
                 help: 'Check out the man page for curl for more information.',
-            },            
+            },
             'python 3': {
                 code: ` ** No Python experts helping us out with this?`,
                 help: 'Check out the man page for curl for more information.',
-            }            
+            }
         };
 
         const active_lang = languages_supported[TypeOfCode];
+
+        //User wants to use something we don't know about???
         if (!active_lang) {
-            console.warn('somebody update something? TypeOfCode"' + TypeOfCode + '" not found!');
+            console.warn('somebody update something? Did you check git for the latest code? TypeOfCode"' + TypeOfCode + '" not found!');
         } else {
-
-
-
-
+ 
             const modalWindow = document.querySelector('#mastermodal');
             const modalWindowTitle = modalWindow.querySelector('.modal-title');
             const modalWindowBody = modalWindow.querySelector('.modal-body');
 
-            modalWindowTitle.innerHTML = "Client Example Code";
+            modalWindowTitle.innerHTML = "Client Example Code"; 
 
-
-            modalWindowBody.SampleCode = `
-                <pre><code>cccc</code></pre>        
-                `;
+            modalWindowBody.SampleCode = `<pre><code>${active_lang.code}</code></pre>`;
 
 
 
@@ -339,6 +339,8 @@ const DebugUI = {
             modalWindowBody.innerHTML = `
                 <div>Please help us improve this!</div>
                 ${modalWindowBody.SampleCode}
+                <br>
+                ${active_lang.help}
                 `;
 
 
