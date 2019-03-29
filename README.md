@@ -68,12 +68,12 @@ However it would seem as only the people actually using the code are the ones do
 todo list. :-)
 
 - [x] Update Issues!
-- [%] Document API
-- [?] Build SQL tables 
-- [%] Sync Airtable data  
-- [$] External Documentation
-- [%] Self discovery 
-- [?] Self documenting documentation
+- [ ] Document API
+- [ ] Build SQL tables 
+- [ ] Sync Airtable data  
+- [ ] External Documentation
+- [ ] Self discovery 
+- [ ] Self documenting documentation
 
 
 # Testing the API
