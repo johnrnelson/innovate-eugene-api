@@ -1,5 +1,8 @@
 /*
-    Simple wrapper to test the API...
+    Simple wrapper to test the API.
+
+    Adding in whatever you can to help the user actually use the API!
+
 */
 
 
@@ -124,6 +127,7 @@ const ServerAPI = {
 
 const DebugUI = {
 
+    //Build an HTML table with all the api help.. 
     SetHelpTable() {
         DebugUI.DisplayTestingActions = document.getElementById("DisplayTestingActions");
         DebugUI.DisplayTestingResults = document.getElementById("DisplayTestingResults");
@@ -224,21 +228,108 @@ const DebugUI = {
             SystemInfo.appendChild(NewEL);
         }
 
-        AddInfoElement('Server Birth', 'The date the server started', debugdata.ST.toLocaleDateString() + " " + debugdata.ST.toLocaleTimeString());
+        AddInfoElement('Start Date', 'The date the server started', debugdata.ST.toLocaleDateString() + " " + debugdata.ST.toLocaleTimeString());
         AddInfoElement('Port', 'APIServer TCP/IP Port', debugdata.port);
         AddInfoElement('Host', 'The hostname of this server',
             '' + window.location.hostname + '');
 
-    } 
+    },
+    /*
+        Fill the side bar with options we can use in our debugger...
+    */
+    FillSideBar() {
+
+        const dbSidebar = document.getElementById('debugger-sidbar');
+        const DebugVerbList = dbSidebar.querySelector("#DebugVerbList");
+
+        //When the user selects something different...
+        DebugVerbList.onchange = function () {
+            const SelOpt = this.selectedOptions[0];
+
+            UIHelper.AceEditor.setValue(JSON.stringify(SelOpt.RecordData.sample, null, "\t"));
+
+            //Set the cursor so the user can start over again...
+            UIHelper.AceEditor.moveCursorTo(0);
+        };
+
+        var apidataCntr = 0;
+        for (var n in debugdata.apidata) {
+            //We don't add the default here!
+            if (n != "default") {
+                const namespaceData = debugdata.apidata[n];
+
+                const optEl = document.createElement('option');
+                optEl.RecordData = namespaceData;
+                // optEl.value = n;
+                optEl.innerHTML = n;
+
+                DebugVerbList.appendChild(optEl);
+
+                //Set default edtor data...
+                if (apidataCntr == 0) {
+                    UIHelper.AceEditor.setValue(JSON.stringify(optEl.RecordData.sample, null, "\t"));
+
+                    //Set the cursor so the user can start over again...
+                    UIHelper.AceEditor.moveCursorTo(0);
+                }
+
+                apidataCntr++;
+
+
+
+            }
+        }
+
+
+
+    },
+    RunDebug(){
+        console.info('DBUG')
+    }
 };
 
-//After page has loaded...
+
+const UIHelper = {
+    AceEditor: null, //Set this in code when you are ready...
+    ShowTab(Tab2Show) {
+
+        // debugger;
+        if (typeof (Tab2Show) == "string") {
+            Tab2Show = document.getElementById(Tab2Show);
+        }
+
+        if (!UIHelper.ActiveTab) {
+            UIHelper.ActiveTab = Tab2Show;
+        } else {
+            UIHelper.ActiveTab.style.display = "none";
+            UIHelper.ActiveTab = Tab2Show;
+        }
+        UIHelper.ActiveTab.style.display = "block";
+    }
+};
+
+
+
+/*
+    After page has loaded, you can be sure that everything you need
+    is already loaded and ready to go...
+*/
 window.onload = function () {
 
+    //Ace Editor is awesome!
+    UIHelper.AceEditor = ace.edit("editor");
+    UIHelper.AceEditor.setOption("mode", "ace/mode/json");
+    UIHelper.AceEditor.$blockScrolling = Infinity;
+
+    //Setup our UI parts...
+    DebugUI.SetHelpTable();
+    DebugUI.SetSysInfo();
+    DebugUI.FillSideBar();
 
 
-    console.info('The API Client has loaded...');
-    console.info('Feel free to explore this object in the console.');
+
+    console.info('The API Client has loaded.Feel free to explore this object in the console.');
+
     /*
         This is only available to the debug client. We 
         don't put this in normal requests from users... 
@@ -250,7 +341,12 @@ window.onload = function () {
     
     `);
 
-    DebugUI.SetHelpTable();
-    DebugUI.SetSysInfo();
+
+    //Which screen do you want to show first? Are you debugging the debugger? lol
+    // UIHelper.ShowTab('TabMain');
+    UIHelper.ShowTab('TabDebugger');
+
+
+
 
 };

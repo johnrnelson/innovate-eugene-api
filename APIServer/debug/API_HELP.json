@@ -1,40 +1,51 @@
 {
     "data": {
-        "test":[
+        "sample": {
+            "service": "The name of the service you want to use..",
+            "view":"The predefined view from MySql and the API server."
+        },
+        "test": [
             {
-                "text":"Get All Assets (SQL)",
-                "cmd":"ServerAPI.TEST.GetAllAssets();",
-                "title":"Use MySQL to get data..."
+                "text": "Get All Assets (SQL)",
+                "cmd": "ServerAPI.TEST.GetAllAssets();",
+                "title": "Use MySQL to get data..."
             },
             {
-                "text":"Get DB Stats (SQL)",
-                "cmd":"ServerAPI.TEST.GetDBStats();",
-                "title":"Gets the totals for tables..."
+                "text": "Get DB Stats (SQL)",
+                "cmd": "ServerAPI.TEST.GetDBStats();",
+                "title": "Gets the totals for tables..."
             },
             {
-                "text":"Get The Data File",
-                "cmd":"ServerAPI.GetDataFolder();",
-                "title":"Gets the flat data file when syncing..."
-            }            
+                "text": "Get The Data File",
+                "cmd": "ServerAPI.GetDataFolder();",
+                "title": "Gets the flat data file when syncing..."
+            }
         ],
         "notes": "Get data from the MySQL server..."
     },
     "help": {
-        "test":[
+        "sample": {
+            "service": "The name of the service you want to use..",
+            "topic":"The help topic your interested in."
+        },        
+        "test": [
             {
-                "text":"Get Basic Help",
-                "cmd":"ServerAPI.GetHelp();",
-                "title":"An example of the API documenting itself."
+                "text": "Get Basic Help",
+                "cmd": "ServerAPI.GetHelp();",
+                "title": "An example of the API documenting itself."
             },
             {
-                "text":"Help on listing assests",
-                "cmd":"ServerAPI.GetHelp('listing assests');",
-                "title":"Of course the help needs lots of work! :-)"
+                "text": "Help on listing assests",
+                "cmd": "ServerAPI.GetHelp('listing assests');",
+                "title": "Of course the help needs lots of work! :-)"
             }
-        ],        
+        ],
         "notes": "Help on this system."
     },
     "default": {
+        "sample": {
+            "service": "The name of the service you want to use.."
+        },         
         "notes": "Example to use as a template for your next service."
     }
 }

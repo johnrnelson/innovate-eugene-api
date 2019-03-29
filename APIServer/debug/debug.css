@@ -5,6 +5,81 @@
     Don't blame John for the ugly CSS. He's slow and color blind. :-) 
 
 */
+body {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    overflow: hidden;
+}
+
+TopNav {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0
+}
+
+MainTabDisplay {
+    display: none;
+    overflow: auto;
+    position: absolute;
+    top: 60px;
+    bottom: 0;
+    left: 0;
+    right: 0
+}
+
+
+
+
+
+/* The debugger section */
+
+.ace-editor {
+    /* display:none; */
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 150px;
+    right: 0;
+}
+
+#TabDebugger #debugger-sidbar {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 150px;
+    background-color: rgb(54, 54, 54);
+    color: white;
+    padding: 5px;
+}
+
+#debugger-sidbar #DebugVerbList {
+    background-color: transparent;
+    width:100%;
+    color:gold;
+    /* right: 150px; */
+}
+
+#debugger-sidbar .ActionButton {
+    font-size: 16px;
+    border-radius: 6px;
+
+    color: rgb(82, 82, 82);
+    width: 90%;
+    
+    text-align: center;
+    text-decoration: none;
+
+    background-color: rgb(212, 212, 212);
+
+}
+
+/* Main help text classes...  */
 
 .HelpText {
     color: gray;
@@ -13,13 +88,12 @@
 
 pre {
     margin: 5px;
-    padding: 25px;      
+    padding: 25px;
     background-color: rgb(238, 238, 238);
 }
-pre code {
 
+pre code {
     white-space: nowrap !important;
-    
 }
 
 .buttonclick {
