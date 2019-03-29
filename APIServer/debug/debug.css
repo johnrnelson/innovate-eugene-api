@@ -77,6 +77,8 @@ MainTabDisplay {
 
     background-color: rgb(212, 212, 212);
 
+    cursor: pointer;
+
 }
 
 /* Main help text classes...  */

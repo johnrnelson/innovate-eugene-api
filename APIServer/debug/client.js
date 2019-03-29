@@ -283,8 +283,72 @@ const DebugUI = {
 
 
     },
-    RunDebug(){
+    OpenDialog() {
+
+    },
+    RunDebug() {
         console.info('DBUG')
+    },
+    //Pop a window to show the code!
+    ExportCode(TypeOfCode) {
+        const languages_supported = {
+            'curl': {
+                code: `curl --request GET --data '{ "service": "data", "view": "AllAssets" }' http://localhost:9118/api`,
+                help: 'Check out the man page for curl for more information.',
+            },
+            'javascript-fetch': {
+                code: ``,
+                help: 'You can use xhr but I guess fetch is the new thing.',
+            },
+            'javascript-http-request': {
+                code: ``,
+                help: 'Check out the man page for curl for more information.',
+            },            
+            'python 3': {
+                code: ` ** No Python experts helping us out with this?`,
+                help: 'Check out the man page for curl for more information.',
+            }            
+        };
+
+        const active_lang = languages_supported[TypeOfCode];
+        if (!active_lang) {
+            console.warn('somebody update something? TypeOfCode"' + TypeOfCode + '" not found!');
+        } else {
+
+
+
+
+            const modalWindow = document.querySelector('#mastermodal');
+            const modalWindowTitle = modalWindow.querySelector('.modal-title');
+            const modalWindowBody = modalWindow.querySelector('.modal-body');
+
+            modalWindowTitle.innerHTML = "Client Example Code";
+
+
+            modalWindowBody.SampleCode = `
+                <pre><code>cccc</code></pre>        
+                `;
+
+
+
+            modalWindowBody.HHHHHHHH = `
+                <div> DDDD </div>
+                `;
+
+
+            modalWindowBody.innerHTML = `
+                <div>Please help us improve this!</div>
+                ${modalWindowBody.SampleCode}
+                `;
+
+
+
+
+            $('#mastermodal').modal({
+                show: true
+            });
+
+        }//End if right type of code...
     }
 };
 

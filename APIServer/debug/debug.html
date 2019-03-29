@@ -1,6 +1,12 @@
 <!DOCTYPE html>
-<html>
+<!-- 
+    This is the DEBUG UI. Use a browser to get more information and 
+    the abilty to debug.
+-->
 
+
+
+<html>
 <head>
 
 
@@ -21,7 +27,9 @@
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
 
-    <script src=https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.3/ace.js> </script> <script>
+    <script src=https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.3/ace.js> </script> <!-- SERVER SIDE -->
+
+    <script>
 //SERVER-SIDE-REPLACE!!!
     </script>
     <style>
@@ -30,6 +38,33 @@
 </head>
 
 <body>
+
+
+
+
+
+    <div id="mastermodal" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Set via code....</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Modal body text goes here.</p>
+                    <p>And mopre dataa</p> 
+                    <div>grrr</div>
+                </div>
+          
+            </div>
+        </div>
+    </div>
+
+
+
+
 
     <TopNav>
         <nav class="navbar navbar-expand-sm navbar-light bg-light">
@@ -67,7 +102,7 @@
     <!-- Because of the editor, you need to declare this first! -->
     <MainTabDisplay id="TabDebugger">
         <div id="debugger-sidbar">
-    
+
 
             <div>Select Action : </div>
             <select id="DebugVerbList"></select>
@@ -77,16 +112,26 @@
             </div>
             <center>
                 <div title="Test the API" onclick="DebugUI.RunDebug()" class="ActionButton">Run Debug</div>
-                <br>
-                <div title="Test the API" onclick="DebugUI.RunDebug()" class="ActionButton">Run Debug</div>
 
             </center>
+            <div>
+                Export Options
 
+            </div>
+            <center> 
+                    <div title="CURL" onclick="DebugUI.ExportCode('curl')" class="ActionButton">CURL</div>
+                    <br>
+                    <div title="JavaScript Browser" onclick="DebugUI.ExportCode('javascript-fetch')" class="ActionButton">JavaScript</div>
+                    <br>
+                    <div title="JavaScript HTTP Client" onclick="DebugUI.ExportCode('javascript-http-request')" class="ActionButton">NodeJS</div>
+                    <br>
+                    <div title="pythod 3" onclick="DebugUI.ExportCode('python 3')" class="ActionButton">Python3</div>    
+            </center>
 
 
         </div>
         <div id="editor" class="ace-editor"></div>
-     
+
     </MainTabDisplay>
 
 
@@ -193,7 +238,8 @@
 
         </div>
     </MainTabDisplay>
- 
+
+
 
 
 </body>
