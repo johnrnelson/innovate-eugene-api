@@ -1,0 +1,10 @@
+{
+	"service": "data",
+	"view": "AllAssets-Search",
+	"query":{
+		"AName":{
+			"operator":"=",
+			"value":"My Test Record"
+		}
+	}
+}

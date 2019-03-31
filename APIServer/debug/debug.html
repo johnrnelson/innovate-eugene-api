@@ -7,6 +7,7 @@
 
 
 <html>
+
 <head>
 
 
@@ -54,10 +55,10 @@
                 </div>
                 <div class="modal-body">
                     <p>Modal body text goes here.</p>
-                    <p>And mopre dataa</p> 
+                    <p>And mopre dataa</p>
                     <div>grrr</div>
                 </div>
-          
+
             </div>
         </div>
     </div>
@@ -67,7 +68,7 @@
 
 
     <TopNav>
-        <nav class="navbar navbar-expand-sm navbar-light bg-light">
+        <nav class="navbar navbar-expand navbar-light bg-light">
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
 
@@ -81,13 +82,15 @@
 
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Data Tables</a>
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">GitHub</a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="JavaScript:console.log('Show UI for [Assets]');">Assets</a>
-                            <a class="dropdown-item"
-                                href="JavaScript:console.log('Show UI for [Entities]');">Entities</a>
+                            <a target="_blank" class="dropdown-item"
+                                href="https://github.com/EugTech/innovate-eugene-api">API</a>
+                            <a target="_blank" class="dropdown-item"
+                                href="https://github.com/EugTech/innovate-eugene-web">Web</a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="JavaScript:console.log('Show UI for [Help]');">Help</a>
+                            <a target="_blank" class="dropdown-item"
+                                href="https://github.com/EugTech/asset-inventory-plan">Plan</a>
                         </div>
                     </li>
 
@@ -102,30 +105,33 @@
     <!-- Because of the editor, you need to declare this first! -->
     <MainTabDisplay id="TabDebugger">
         <div id="debugger-sidbar">
-
-
-            <div>Select Action : </div>
-            <select id="DebugVerbList"></select>
-
-            <div>
-                Debug Options
-            </div>
             <center>
+
+
+                <div>Select Service</div>
+                <select id="DebugVerbList"></select>
+                <br>
+                <select id="ExampleCodeList"></select>
+                <br>
+
                 <div title="Test the API" onclick="DebugUI.RunDebug()" class="ActionButton">Run Debug</div>
 
-            </center>
-            <div>
-                Export Options
 
-            </div>
-            <center> 
-                    <div title="CURL" onclick="DebugUI.ExportCode('curl')" class="ActionButton">CURL</div>
-                    <br>
-                    <div title="JavaScript Browser" onclick="DebugUI.ExportCode('javascript-fetch')" class="ActionButton">JavaScript</div>
-                    <br>
-                    <div title="JavaScript HTTP Client" onclick="DebugUI.ExportCode('javascript-http-request')" class="ActionButton">NodeJS</div>
-                    <br>
-                    <div title="pythod 3" onclick="DebugUI.ExportCode('python 3')" class="ActionButton">Python3</div>    
+                <div style="padding-top:15px;">
+                    Export Options
+
+                </div>
+
+                <div title="CURL" onclick="DebugUI.ExportCode('curl')" class="ActionButton">CURL</div>
+
+                <div title="JavaScript Browser" onclick="DebugUI.ExportCode('javascript-fetch')" class="ActionButton">
+                    JavaScript</div>
+
+                <div title="JavaScript HTTP Client" onclick="DebugUI.ExportCode('javascript-http-request')"
+                    class="ActionButton">NodeJS</div>
+
+                <div title="pythod 3" onclick="DebugUI.ExportCode('python 3')" class="ActionButton">Python3</div>
+
             </center>
 
 
@@ -141,12 +147,11 @@
 
 
             <div class="page-header">
-                <h1>Documentation and Debug Utility</h1>
-
+                <h1>Debug Utility</h1>
             </div>
             <div class="alert alert-info" role="alert">
                 Use this tool to both get help and test the API.
-                <b>Open your browser window console to really take advantage of this tool.</b>
+                <b>Open your browser window console to really take advantage of the output!</b>
             </div>
 
             <p class="HelpText">
@@ -176,55 +181,19 @@
 
 
 
-            <h2 id="index-curl-examples">Some curl Examples</h2>
-
-            <p class="HelpText">Use this to get data from the live server. Notice that the actuall HTTP verb is not
-                important.</p>
-            <pre><code>curl --request GET --data '{ "service": "data", "view": "AllAssets" }' https://api.innovateeugene.com/api</code></pre>
-            <pre><code>curl --request POST --data '{ "service": "data", "view": "AllAssets" }' https://api.innovateeugene.com/api</code></pre>
-            <pre><code>curl --request POST --data '{ "service": "data", "view": "AllAssets" }' https://api.innovateeugene.com/api</code></pre>
-
-
-            <p class="HelpText">
-                Use this to get data from the your own debug server.
-            </p>
-
-            <pre><code>curl --request GET --data '{ "service": "data", "view": "AllAssets" }' http://localhost:9118/api</code></pre>
-
 
             <!-- footer -->
             <div class="row footer-row">
-                <div id="SystemInfo" class="col-md-4">
+                <div id="SystemInfo" class="col-md-8">
                     <div class="FooterHeading">System Information</div>
-
                 </div>
 
                 <div class="col-md-4">
-                    <div class="FooterHeading">Application Information</div>
+                    <div class="FooterHeading">Open Source Components</div>
 
-                    <a href="JavaScript:document.location='/';">Server Root</a>
+                    <a title="Used to make the simple UI" target="_blank" href="https://getbootstrap.com/">Bootstrap</a>
                     <br>
-                    <a target="_blank" href="https://github.com/EugTech/innovate-eugene-api">API Github Repo</a>
-                    <br>
-                    <a target="_blank" href="https://github.com/EugTech/innovate-eugene-web">Website Github Repo</a>
-                    <br>
-                    <a target="_blank" href="https://github.com/EugTech/asset-inventory/issues">Main Asset Inventory
-                        Repo</a>
-
-
-                </div>
-                <div class="col-md-4">
-                    <div class="FooterHeading">HelpFul Links</div>
-
-                    <a title="Run the project locally!" href="http://127.0.0.1:9118/">Local Debug</a>
-                    <br>
-                    <a title="The public api server" href="http://api.innovateeugene.com/api">Web Site API Debug</a>
-                    <br>
-                    <a title="Wiki info about REST" target="_blank"
-                        href="https://en.wikipedia.org/wiki/Representational_state_transfer">REST Wiki</a>
-                    <br>
-                    <a title="Wiki info about JSON" target="_blank" href="https://en.wikipedia.org/wiki/JSON">JSON
-                        Wiki</a>
+                    <a title="Code editor for the API Explorer" target="_blank" href="https://ace.c9.io/">Ace Editor</a>
                     <br>
                     <a title="Wiki info about Node.js" target="_blank"
                         href="https://en.wikipedia.org/wiki/Node.js">Node.js

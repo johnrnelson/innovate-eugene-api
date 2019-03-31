@@ -7,8 +7,8 @@ const MySQLDataModel = {
         const SQL = "SELECT * FROM `asset-inventory`.AllAssets limit 50;";
         SERVER.SqlData.ExecuteSQL(SQL, function (SQLResult) {
             if (SQLResult.err) {
-                Result.err = SQLResult.err;
-                debugger;
+                Result.err = SQLResult.err.message;
+                // debugger;
             } else {
                 Result.data = SQLResult.rows;
             }
@@ -19,26 +19,26 @@ const MySQLDataModel = {
         const SQL = "SELECT * FROM `asset-inventory`.AllAssets limit 30;";
         SERVER.SqlData.ExecuteSQL(SQL, function (SQLResult) {
             if (SQLResult.err) {
-                Result.err = SQLResult.err;
-                debugger;
+                Result.err = SQLResult.err.message;
+                // debugger;
             } else {
                 Result.data = SQLResult.rows;
             }
             Response.end(JSON.stringify(Result));
         });
-    }    ,
+    },
     TableTotals(Result, Request, Response) {
         const SQL = "SELECT count(*) TotalAssets FROM `asset-inventory`.AllAssets limit 30;";
         SERVER.SqlData.ExecuteSQL(SQL, function (SQLResult) {
             if (SQLResult.err) {
-                Result.err = SQLResult.err;
-                debugger;
+                Result.err = SQLResult.err.message;
+                // debugger;
             } else {
                 Result.data = SQLResult.rows;
             }
             Response.end(JSON.stringify(Result));
         });
-    }      
+    }
 };
 
 
@@ -48,10 +48,15 @@ function ServiceRequest(request, response) {
         Now if your chance to setup a default record for this service...
     */
     const result = {
-        debug: null // put what you need in here...
+        // put what you need in here to help the user debug any issues...
+        debug: {
+            User: request.User,
+            QueryData: request.QueryData,
+            QueryPath: request.QueryPath,
+        }
     };
-    
-    
+
+
     //Debug  - Let us know what the client sent...
     // console.log(request.RequestData);/
 

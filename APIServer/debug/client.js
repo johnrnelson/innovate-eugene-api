@@ -6,6 +6,7 @@
 */
 
 
+
 const ServerAPI = {
 
 
@@ -101,6 +102,8 @@ const ServerAPI = {
                     } else {
                         console.log('All Assets via SQL!');
                         console.log(AllData);
+                        DebugUI.DisplayTestingResults.innerHTML = JSON.stringify(AllData);
+
                     }
 
                 }
@@ -229,9 +232,14 @@ const DebugUI = {
         }
 
         AddInfoElement('Start Date', 'The date the server started', debugdata.ST.toLocaleDateString() + " " + debugdata.ST.toLocaleTimeString());
+
         AddInfoElement('Port', 'APIServer TCP/IP Port', debugdata.port);
+
         AddInfoElement('Host', 'The hostname of this server',
             '' + window.location.hostname + '');
+
+        AddInfoElement('NodeVersion', 'The version of node on this server',
+            debugdata.NodeVersion);
 
     },
     /*
@@ -241,16 +249,98 @@ const DebugUI = {
 
         const dbSidebar = document.getElementById('debugger-sidbar');
         const DebugVerbList = dbSidebar.querySelector("#DebugVerbList");
+        const ExampleCodeList = dbSidebar.querySelector("#ExampleCodeList");
+
+
+
+
 
         //When the user selects something different...
         DebugVerbList.onchange = function () {
             const SelOpt = this.selectedOptions[0];
 
-            UIHelper.AceEditor.setValue(JSON.stringify(SelOpt.RecordData.sample, null, "\t"));
 
-            //Set the cursor so the user can start over again...
-            UIHelper.AceEditor.moveCursorTo(0);
+
+            //Quick clear the old stuff...
+            ExampleCodeList.innerHTML = "";
+            // debugger;
+
+
+
+            ServerAPI.Fetch({
+                service: 'help',
+                data: {
+                    topic: 'sample-code-list',
+                    sampleid: SelOpt.value
+
+                }
+            })
+                .then(data => {
+                    console.log('Set default examples---...', data);
+
+                    for (let index = 0; index < data.samples.length; index++) {
+                        const sample = data.samples[index];
+                        const opt = document.createElement('option');
+                        opt.innerHTML = sample;
+                        ExampleCodeList.appendChild(opt);
+                    }
+
+                    ExampleCodeList.onchange();
+
+                }) // JSON-string from `response.json()` call
+                .catch(error => {
+                    console.error(error);
+                    debugger;
+                });
+
+
         };
+
+
+        //When the user selects something different...
+        ExampleCodeList.onchange = function () {
+
+            const SelVerb = DebugVerbList.selectedOptions[0];
+
+            const SelOpt = this.selectedOptions[0];
+
+            ServerAPI.Fetch({
+                service: 'help',
+                data: {
+                    topic: 'sample-code-fetch',
+                    sampleid: SelOpt.innerHTML,
+                    'target-service': SelVerb.innerHTML
+                }
+            })
+                .then(data => {
+
+                    if (data.err) {
+                        debugger;
+                        console.warn(data.err);
+                    } else {
+
+                        UIHelper.AceEditor.setValue(JSON.stringify(data.code, null, "\t"));
+
+                        //Set the cursor so the user can start over again...
+                        UIHelper.AceEditor.moveCursorTo(0);
+                    }
+
+
+                }) // JSON-string from `response.json()` call
+                .catch(error => {
+                    console.error(error);
+                    debugger;
+                });
+
+
+        };
+
+
+
+
+
+
+
 
         var apidataCntr = 0;
         for (var n in debugdata.apidata) {
@@ -274,11 +364,11 @@ const DebugUI = {
                 }
 
                 apidataCntr++;
-
-
-
             }
         }
+
+        //Use the default....
+        DebugVerbList.onchange();
 
 
 
@@ -287,53 +377,132 @@ const DebugUI = {
 
     },
     RunDebug() {
-        console.info('DBUG')
+        console.clear();
+        console.info('\r\nRun the debug code : ');
+
+        // debugger;
+        //Get our contents from the editor...
+        const JSONPayload = DebugUI.GetEditorJSON();
+
+        if (JSONPayload) {
+            ServerAPI.Fetch(JSONPayload)
+                .then(data => {
+                    console.log('Debug Data:', data);
+                }) // JSON-string from `response.json()` call
+                .catch(error => {
+                    console.error(error);
+                    debugger;
+                });
+        }
+
+
+    },
+    GetEditorJSON() {
+
+        try {
+            return JSONPayload = JSON.parse(UIHelper.AceEditor.getValue());
+
+
+        } catch (errorJSON) {
+
+            const modalWindow = document.querySelector('#mastermodal');
+            const modalWindowTitle = modalWindow.querySelector('.modal-title');
+            const modalWindowBody = modalWindow.querySelector('.modal-body');
+
+            modalWindowTitle.innerHTML = "Error in JSON!";
+
+            modalWindowBody.innerHTML = `
+            <div>Fix the JSON errors before attempting to call the API!</div> 
+            <br> 
+            `;
+
+            $('#mastermodal').modal({
+                show: true
+            });
+            return null;
+        }
+
     },
     //Pop a window to show the code!
     ExportCode(TypeOfCode) {
+
+
+        //Get our contents from the editor...
+        const JSONPayload = DebugUI.GetEditorJSON();
 
         /*
             Define the languages supported and how to help...
         */
         const languages_supported = {
-            'curl': {
-                code: `curl --request GET --data '{ "service": "data", "view": "AllAssets" }' http://localhost:9118/api`,
-                help: 'Check out the man page for curl for more information.',
+            'curl': function () {
+
+                return {
+                    code: `curl --request GET --data '${JSON.stringify(JSONPayload)}' ${window.location.href}`,
+                    help: 'Check out the man page for curl for more information.',
+                }
             },
-            'javascript-fetch': {
-                code: `** SAMPLE CODE **`,
-                help: 'You can use xhr but I guess fetch is the new thing.',
+            'javascript-fetch': function () {
+                return {
+                    code: `
+                const url = document.URL + 'api/';<br>
+                <br>
+                <br>
+                return fetch(url, {<br>
+                    method: "PUT", // *GET, POST, PUT, DELETE, etc.<br>
+                    mode: "cors", // no-cors, cors, *same-origin<br>
+                    cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached<br>
+                    credentials: "same-origin", // include, *same-origin, omit<br>
+                    <br>
+                    <br>
+                    headers: {<br>
+                        "Content-Type": "application/json",<br>
+                    },<br>
+                    redirect: "follow", // manual, *follow, error<br>
+                    referrer: "no-referrer", // no-referrer, *client<br>
+                    body: JSON.stringify(data), // body data type must match "Content-Type" header<br>
+                }).then(response => response.json()); // parses JSON response into native Javascript objects<br>
+                <br>
+                
+                `,
+                    help: 'You can use xhr but I guess fetch is the new thing.',
+                }
             },
-            'javascript-http-request': {
-                code: `** SAMPLE CODE **`,
-                help: 'Check out the man page for curl for more information.',
+            'javascript-http-request': function () {
+                return {
+                    code: `** SAMPLE CODE for npm "request" **`,
+                    help: 'There are many ways to use request objects in Node.',
+                }
             },
-            'python 3': {
-                code: ` ** No Python experts helping us out with this?`,
-                help: 'Check out the man page for curl for more information.',
+            'python 3': function () {
+                return {
+                    code: `No Python experts helping us out with this?
+<br>
+Any Help at all?
+                `,
+                    help: 'Check out the man page for curl for more information.',
+                }
             }
         };
 
-        const active_lang = languages_supported[TypeOfCode];
+
+
+        const active_lang = languages_supported[TypeOfCode]({
+            jSON: 'data'
+        });
 
         //User wants to use something we don't know about???
         if (!active_lang) {
             console.warn('somebody update something? Did you check git for the latest code? TypeOfCode"' + TypeOfCode + '" not found!');
         } else {
- 
+
             const modalWindow = document.querySelector('#mastermodal');
             const modalWindowTitle = modalWindow.querySelector('.modal-title');
             const modalWindowBody = modalWindow.querySelector('.modal-body');
 
-            modalWindowTitle.innerHTML = "Client Example Code"; 
+            modalWindowTitle.innerHTML = "Client Example Code";
 
             modalWindowBody.SampleCode = `<pre><code>${active_lang.code}</code></pre>`;
 
-
-
-            modalWindowBody.HHHHHHHH = `
-                <div> DDDD </div>
-                `;
 
 
             modalWindowBody.innerHTML = `
@@ -342,9 +511,6 @@ const DebugUI = {
                 <br>
                 ${active_lang.help}
                 `;
-
-
-
 
             $('#mastermodal').modal({
                 show: true
@@ -382,9 +548,14 @@ const UIHelper = {
 */
 window.onload = function () {
 
-    //Ace Editor is awesome!
+    //Ace Editor is awesome! 
     UIHelper.AceEditor = ace.edit("editor");
+
+    // Go here for more options... https://github.com/ajaxorg/ace/wiki/Configuring-Ace
     UIHelper.AceEditor.setOption("mode", "ace/mode/json");
+    UIHelper.AceEditor.setOption("autoScrollEditorIntoView", true);
+    UIHelper.AceEditor.setOption("showPrintMargin", false);
+    UIHelper.AceEditor.setOption("fontSize", 15);
     UIHelper.AceEditor.$blockScrolling = Infinity;
 
     //Setup our UI parts...
@@ -411,6 +582,7 @@ window.onload = function () {
     //Which screen do you want to show first? Are you debugging the debugger? lol
     // UIHelper.ShowTab('TabMain');
     UIHelper.ShowTab('TabDebugger');
+
 
 
 

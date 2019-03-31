@@ -1,8 +1,8 @@
 {
     "data": {
         "sample": {
-            "service": "The name of the service you want to use..",
-            "view":"The predefined view from MySql and the API server."
+            "service": "data", 
+            "view":"Can be (AllAssets,TableTotals, or test)"
         },
         "test": [
             {
@@ -14,19 +14,14 @@
                 "text": "Get DB Stats (SQL)",
                 "cmd": "ServerAPI.TEST.GetDBStats();",
                 "title": "Gets the totals for tables..."
-            },
-            {
-                "text": "Get The Data File",
-                "cmd": "ServerAPI.GetDataFolder();",
-                "title": "Gets the flat data file when syncing..."
-            }
+            } 
         ],
         "notes": "Get data from the MySQL server..."
     },
     "help": {
         "sample": {
-            "service": "The name of the service you want to use..",
-            "topic":"The help topic your interested in."
+            "service": "help",
+            "topic":"The help topic your interested in. Can be anything right now. :-("
         },        
         "test": [
             {

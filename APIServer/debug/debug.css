@@ -58,7 +58,7 @@ MainTabDisplay {
     padding: 5px;
 }
 
-#debugger-sidbar #DebugVerbList {
+#debugger-sidbar select {
     background-color: transparent;
     width:100%;
     color:gold;
@@ -70,7 +70,9 @@ MainTabDisplay {
     border-radius: 6px;
 
     color: rgb(82, 82, 82);
-    width: 90%;
+    /* width: 90%; */
+    left:0;
+    right:0;
     
     text-align: center;
     text-decoration: none;
@@ -78,6 +80,7 @@ MainTabDisplay {
     background-color: rgb(212, 212, 212);
 
     cursor: pointer;
+    margin-top: 10px;
 
 }
 

@@ -54,6 +54,7 @@ const IPC = {
         //Lets start our server..
         server.listen(IPC.PORT, IPC.IPADDRESS, function () {
             console.log("Web Server Ready : http://" + IPC.IPADDRESS + ":" + IPC.PORT);
+            IPC.StartDate = new Date();
         });
     },
 
@@ -108,15 +109,17 @@ const IPC = {
                                         //
 
 
-                                        const ServerTimeNow = Date();
 
 
                                         //  *** SEND THE END RESPONSE!!!!
                                         const debugdata = `
 window.debugdata = {
+    NodeVersion:"${process.version}",
     port:${IPC.PORT},
     apidata:${API_HELP},
-    ST: new Date('${ServerTimeNow.toLocaleString()}')
+    ST: new Date('${IPC.StartDate.toLocaleString()}'),
+    QueryData:${JSON.stringify(request.QueryData)}
+
 };
 `+ clientjs;
 
@@ -167,12 +170,24 @@ window.debugdata = {
     */
     ServiceWeb: function (request, response) {
 
-
         //ignore this request. We are not a real web server!
         if (request.url == "/favicon.ico") {
             response.end();
             return;
         }
+
+
+        const querystring = require('querystring');
+        const url = require('url');
+        
+
+        const RequestURLData = url.parse(request.url);
+
+        //Any Querystring they submit gets attached to the request object as an object not a string..
+        request.QueryData = querystring.parse(RequestURLData.query);
+        request.QueryPath = RequestURLData.pathname;
+
+        
 
         //Give the response and easy way out for errors...
         response.SendError = IPC.SendError;
@@ -182,7 +197,7 @@ window.debugdata = {
         request.Host = request.headers["host"];
 
 
-        //default to null!
+        //Default to a basic profile. Upgrade later if you get more infor about the connection...
         request.User = {
             IPAddress: request.headers["x-real-ip"],
             RemoteIP: request.connection.remoteAddress,
@@ -206,34 +221,31 @@ window.debugdata = {
 
 
             request.on('end', function () {
-                if (body == '') {
-                    // response.end();
+                if (body == '') {                  
                     IPC.ServeDebugAPP(request, response);
                 }
                 else {
                     request.RequestData = {};
 
-                    //We alwasy use JSON for post!!!
+                    //We alwasy use JSON for everything.. 
                     response.writeHead(200, {
                         'Content-Type': 'application/json'
                     });
 
                     try {
-                        const url = require('url');
-                        const path = require('path');
 
+                        //Special error if the JSON is not formed well...
                         try {
                             request.RequestData = JSON.parse(body);
 
                         } catch (badJSON) {
-
                             response.SendError(response, {
                                 err: badJSON
                             });
 
                         }
 
-                        // debugger;
+                        // We need at least a service name to work with...
                         if (!request.RequestData.service) {
                             response.end(JSON.stringify({
                                 err: 'No service defined!'

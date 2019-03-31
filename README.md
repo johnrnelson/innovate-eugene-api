@@ -68,16 +68,14 @@ However it would seem as only the people actually using the code are the ones do
 todo list. :-)
 
 - [x] Update Issues!
-- [ ] Document API
-- [ ] Build SQL tables 
-- [ ] Sync Airtable data  
+- [x] Build SQL tables 
+- [x] Proof Airtable sync data  
 - [ ] External Documentation
 - [ ] Self discovery 
 - [ ] Self documenting documentation
 
 
 # Testing the API
-
 Checkout [API Tester](https://www.apitester.com/) and use the 
 enpoint `https://api.innovateeugene.com/api` and the 
 request body of `{"service":"data","view":"AllAssets"}` .
