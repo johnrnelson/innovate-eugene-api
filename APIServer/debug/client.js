@@ -251,10 +251,6 @@ const DebugUI = {
         const DebugVerbList = dbSidebar.querySelector("#DebugVerbList");
         const ExampleCodeList = dbSidebar.querySelector("#ExampleCodeList");
 
-
-
-
-
         //When the user selects something different...
         DebugVerbList.onchange = function () {
             const SelOpt = this.selectedOptions[0];
@@ -380,6 +376,12 @@ const DebugUI = {
         console.clear();
         console.info('\r\nRun the debug code : ');
 
+
+        const APIDebugResults = document.getElementById("APIDebugResults");
+
+        APIDebugResults.innerHTML = "";
+
+
         // debugger;
         //Get our contents from the editor...
         const JSONPayload = DebugUI.GetEditorJSON();
@@ -388,6 +390,9 @@ const DebugUI = {
             ServerAPI.Fetch(JSONPayload)
                 .then(data => {
                     console.log('Debug Data:', data);
+
+                    APIDebugResults.innerHTML = JSON.stringify(data);
+
                 }) // JSON-string from `response.json()` call
                 .catch(error => {
                     console.error(error);
@@ -397,6 +402,27 @@ const DebugUI = {
 
 
     },
+    /*
+        Toggle the result panel if we are too lazy to check out the 
+        window console. lol  :-)
+    */
+    ToggleResult(ShowFlag){
+        debugger;
+        const APIDebugResultsElement = document.getElementById("APIDebugResults");
+        const AceEditorElement = document.getElementById("editor");
+        debugger;
+        if (APIDebugResultsElement.style.display){
+            console.info(AceEditorElement.style.display)
+        }else{
+
+        }
+        console.log(ShowFlag);
+
+    },
+
+
+
+
     GetEditorJSON() {
 
         try {
