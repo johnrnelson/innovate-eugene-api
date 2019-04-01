@@ -29,6 +29,8 @@
         crossorigin="anonymous"></script>
 
     <script src=https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.3/ace.js> </script> <!-- SERVER SIDE -->
+    <script src=https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.3/ext-language_tools.js> </script> <!-- SERVER SIDE -->
+
 
     <script>
 //SERVER-SIDE-REPLACE!!!
@@ -130,19 +132,26 @@
 
                 <hr width="90%" size="1" />
 
-                <div title="Toggle Result Panel" onclick="DebugUI.ToggleResult()" class="ActionButton">Toggle Result</div>
+                <div title="Toggle Result Panel" onclick="DebugUI.ToggleResult()" class="ActionButton">Toggle Result
+                </div>
 
 
             </center>
         </div>
         <div id="PayloadEditor" class="ace-editor"></div>
-        <div id="APIDebugResults" class="APIDebugResults"></div>  
+        <div id="APIDebugResults" class="APIDebugResults"></div>
 
     </MainTabDisplay>
 
 
     <MainTabDisplay id="TabMain" style="overflow:auto;">
-        <div class="container">
+
+
+
+ 
+
+
+        <div class="container"> 
 
 
 
@@ -162,7 +171,7 @@
             </p>
 
 
-             
+
 
 
 

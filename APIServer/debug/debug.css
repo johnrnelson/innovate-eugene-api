@@ -31,7 +31,7 @@ MainTabDisplay {
     left: 0;
     right: 0
 }
- 
+
 
 
 /* The debugger section */
@@ -40,15 +40,15 @@ MainTabDisplay {
     /* display:none; */
     position: absolute;
     top: 0;
-    bottom: 200px;
+    bottom: 300px;
     left: 150px;
     right: 0;
 }
 
-.APIDebugResults{
+.APIDebugResults {
     position: absolute;
     /* top: 0; */
-    height:200px;
+    height: 300px;
     bottom: 0;
     left: 150px;
     right: 0;
@@ -71,8 +71,8 @@ MainTabDisplay {
 
 #debugger-sidbar select {
     background-color: transparent;
-    width:100%;
-    color:gold;
+    width: 100%;
+    color: gold;
     /* right: 150px; */
 }
 
@@ -82,9 +82,9 @@ MainTabDisplay {
 
     color: rgb(82, 82, 82);
     /* width: 90%; */
-    left:0;
-    right:0;
-    
+    left: 0;
+    right: 0;
+
     text-align: center;
     text-decoration: none;
 

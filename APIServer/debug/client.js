@@ -204,7 +204,7 @@ const DebugUI = {
                     UIHelper.AceDisplayRsults.setValue("{}");
 
                     //Set the cursor so the user can start over again...
-                    UIHelper.AceDisplayRsults.moveCursorTo(0);                    
+                    UIHelper.AceDisplayRsults.moveCursorTo(0);
                 }
 
 
@@ -256,7 +256,7 @@ const DebugUI = {
     RunDebug() {
         console.clear();
         console.info('\r\nRun the debug code!');
- 
+
 
         // debugger;
         //Get our contents from the editor...
@@ -280,18 +280,18 @@ const DebugUI = {
                     }
                     */
 
-                
+
 
 
                     UIHelper.AceDisplayRsults.setValue(JSON.stringify(data, null, "\t"));
 
                     //Set the cursor so the user can start over again...
                     UIHelper.AceDisplayRsults.moveCursorTo(0);
-              
 
 
 
- 
+
+
 
 
 
@@ -442,7 +442,7 @@ Any Help at all?
                 title: active_lang.title,
                 body: `
                 <div>Please help us improve this!</div>
-                <pre><code>${active_lang.code.replace(/\n/g,'<br>')}</code></pre>
+                <pre><code>${active_lang.code.replace(/\n/g, '<br>')}</code></pre>
                 <br>
                 <b><i>${active_lang.help}</i></b>
                 `
@@ -496,8 +496,57 @@ window.onload = function () {
 
         return aceEditor;
     }
+
     UIHelper.AceEditor = SetupAceEditor('PayloadEditor');
     UIHelper.AceDisplayRsults = SetupAceEditor('APIDebugResults');
+
+    // debugger;
+
+    var langTools = ace.require("ace/ext/language_tools");
+    // var editor = ace.edit("editor");
+
+    // uses http://rhymebrain.com/api.html
+    var rhymeCompleter = {
+        getCompletions: (editor, session, caretPosition2d, prefix, callback) => {
+
+            var currline = editor.getSelectionRange().start.row;
+            var content = editor.session.getLine(currline);
+
+
+            const WordList = [];
+            WordList.push({
+                caption: 'service',
+                meta: '',
+                score: 10,
+            });
+
+            WordList.push({
+                caption: 'view',
+                meta: '',
+                score: 10,
+            });
+
+
+            callback(null, WordList.map((s) => {
+                return {
+                    // name: s.caption,
+                    value: s.caption,
+                    score: 100,
+                    meta: s.meta,
+                }
+            }))
+        },
+    }
+    langTools.addCompleter(rhymeCompleter);
+
+    UIHelper.AceEditor.setOptions({
+        enableBasicAutocompletion: rhymeCompleter,
+        enableLiveAutocompletion: true,
+        enableSnippets: true,
+    });
+
+
+
 
 
 
@@ -523,8 +572,25 @@ window.onload = function () {
 
 
     //Which screen do you want to show first? Are you debugging the debugger? lol
-    // UIHelper.ShowTab('TabMain');
-    UIHelper.ShowTab('TabDebugger');
+    UIHelper.ShowTab('TabMain');
+    // UIHelper.ShowTab('TabDebugger');
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
 
 
 
