@@ -11,6 +11,11 @@
 			"Field": "AName",
 			"operator": "=",
 			"value": "Something else Record"
-		}		
+		},	
+		{
+			"Field": "City",
+			"operator": "=",
+			"value": "Eugene"
+		}				
 	]
 }

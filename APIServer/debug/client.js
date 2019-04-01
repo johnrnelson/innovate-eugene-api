@@ -4,10 +4,7 @@
     Adding in whatever you can to help the user actually use the API!
 */
 
-
-
-const ServerAPI = {
-
+const DebugUI = {
     //Quick and easy way to get data from our api...
     Fetch(data = {}) {
         const url = document.URL + 'api/';
@@ -26,20 +23,17 @@ const ServerAPI = {
             body: JSON.stringify(data), // body data type must match "Content-Type" header
         }).then(response => response.json()); // parses JSON response into native Javascript objects 
 
-    } 
-};
+    },
 
-const DebugUI = {
+
+    /*
+        The rest is just setting up the UI for the user...
+    */
+
 
     //Build an HTML table with all the api help.. 
-    SetHelpTable() {
-        DebugUI.DisplayTestingActions = document.getElementById("DisplayTestingActions");
-        // DebugUI.DisplayTestingResults = document.getElementById("DisplayTestingResults");
-        // DebugUI.DisplayTestingHelp = document.getElementById("DisplayTestingHelp");
-
-
-        // DebugUI.DisplayTestingResults.innerHTML = "Ready to display testing results!"
-        // DebugUI.DisplayTestingHelp.innerHTML = "Ready to display dynamic api help..."
+    SetHelpTable(DisplayHTMLELement) {
+        DebugUI.DisplayTestingActions = document.getElementById(DisplayHTMLELement);
 
 
         //Clear any old stuff...
@@ -82,20 +76,6 @@ const DebugUI = {
                 TestActionColB.RowElement = TestActionRow;
 
 
-                // //User clicked on me!!!! ??
-                // TestActionColA.onclick = function () {
-                //     // console.log(this.RowElement);
-                //     // debugger;
-                //     console.log(this.RowElement.DataRecord);
-                //     try {
-                //         window.eval(this.RowElement.DataRecord.cmd);
-                //     } catch (errEval) {
-                //         console.warn('Bad Eval!', errEval);
-                //         debugger;
-
-                //     }
-                // }
-
                 TestActionRow.appendChild(TestActionColA);
                 TestActionRow.appendChild(TestActionColB);
                 DebugUI.DisplayTestingActions.appendChild(TestActionRow);
@@ -104,23 +84,13 @@ const DebugUI = {
             }
 
 
-
-            // const rowHTML = `            
-            //     <td>
-            //     <b>${NameSpace}</b>
-            //     </td>
-            //     <td>${RowData.notes}</td>            
-            // `;
-            // const TR = document.createElement('tr');
-            // TR.innerHTML = rowHTML;
-            // DebugUI.DisplayTestingActions.appendChild(TR);
-
         }
 
 
     },
     //Show the server info via HTML in a componet fashion....
     SetSysInfo() {
+        //You will find this on the `debug.html` page...
         const SystemInfo = document.getElementById("SystemInfo");
 
         //Setup a simple function to add html to our DOM... super simple!!!!!!!!!
@@ -133,14 +103,13 @@ const DebugUI = {
         }
 
 
-        //You are user!!!
+        //The user info for the client to use...
         // console.log(debugdata.UserInfo);
 
         if (debugdata.UserInfo.isAuthenticated) {
             AddInfoElement('Security Level', 'Level of permissions on the server', debugdata.UserInfo.SecurityLevel);
         } else {
             AddInfoElement('Security Status', 'Your current user status from the servers perspective.', 'Not Authenticated');
-
         }
 
 
@@ -149,6 +118,7 @@ const DebugUI = {
 
         AddInfoElement('NodeVersion', 'The version of node on this server',
             debugdata.NodeVersion);
+
         AddInfoElement('Start Date', 'The date the server started', debugdata.ST.toLocaleDateString() + " " + debugdata.ST.toLocaleTimeString());
 
 
@@ -174,27 +144,27 @@ const DebugUI = {
 
 
 
-            ServerAPI.Fetch({
+            DebugUI.Fetch({
                 service: 'help',
                 data: {
                     topic: 'sample-code-list',
                     sampleid: SelOpt.value
 
                 }
-            })
-                .then(data => {
-                    console.log('Set default examples---...', data);
+            }).then(data => {
+                // console.log('Set default examples---...', data);
 
-                    for (let index = 0; index < data.samples.length; index++) {
-                        const sample = data.samples[index];
-                        const opt = document.createElement('option');
-                        opt.innerHTML = sample;
-                        ExampleCodeList.appendChild(opt);
-                    }
+                for (let index = 0; index < data.samples.length; index++) {
+                    const sample = data.samples[index];
+                    const opt = document.createElement('option');
+                    opt.value = sample;
+                    opt.innerHTML = sample;
+                    ExampleCodeList.appendChild(opt);
+                }
 
-                    ExampleCodeList.onchange();
+                ExampleCodeList.onchange();
 
-                }) // JSON-string from `response.json()` call
+            }) // JSON-string from `response.json()` call
                 .catch(error => {
                     console.error(error);
                     debugger;
@@ -211,29 +181,28 @@ const DebugUI = {
 
             const SelOpt = this.selectedOptions[0];
 
-            ServerAPI.Fetch({
+            DebugUI.Fetch({
                 service: 'help',
                 data: {
                     topic: 'sample-code-fetch',
                     sampleid: SelOpt.innerHTML,
                     'target-service': SelVerb.innerHTML
                 }
-            })
-                .then(data => {
+            }).then(data => {
 
-                    if (data.err) {
-                        debugger;
-                        console.warn(data.err);
-                    } else {
+                if (data.err) {
+                    debugger;
+                    console.warn(data.err);
+                } else {
 
-                        UIHelper.AceEditor.setValue(JSON.stringify(data.code, null, "\t"));
+                    UIHelper.AceEditor.setValue(JSON.stringify(data.code, null, "\t"));
 
-                        //Set the cursor so the user can start over again...
-                        UIHelper.AceEditor.moveCursorTo(0);
-                    }
+                    //Set the cursor so the user can start over again...
+                    UIHelper.AceEditor.moveCursorTo(0);
+                }
 
 
-                }) // JSON-string from `response.json()` call
+            }) // JSON-string from `response.json()` call
                 .catch(error => {
                     console.error(error);
                     debugger;
@@ -243,8 +212,6 @@ const DebugUI = {
         };
 
 
-
-        var apidataCntr = 0;
         for (var n in debugdata.apidata) {
             //We don't add the default here!
             if (n != "default") {
@@ -252,27 +219,15 @@ const DebugUI = {
 
                 const optEl = document.createElement('option');
                 optEl.RecordData = namespaceData;
-                // optEl.value = n;
+                optEl.value = n;
                 optEl.innerHTML = n;
-
                 DebugVerbList.appendChild(optEl);
 
-                //Set default edtor data...
-                if (apidataCntr == 0) {
-                    UIHelper.AceEditor.setValue(JSON.stringify(optEl.RecordData.sample, null, "\t"));
-
-                    //Set the cursor so the user can start over again...
-                    UIHelper.AceEditor.moveCursorTo(0);
-                }
-
-                apidataCntr++;
             }
         }
 
-        //Use the default....
+        //Use the default and set the edtor....
         DebugVerbList.onchange();
-
-
 
     },
     OpenDialog(DialogInfo) {
@@ -294,27 +249,19 @@ const DebugUI = {
     },
     RunDebug() {
         console.clear();
-        console.info('\r\nRun the debug code : ');
-
-
-        const APIDebugResults = document.getElementById("APIDebugResults");
-
-        APIDebugResults.innerHTML = "";
-
+        console.info('\r\nRun the debug code!');
+ 
 
         // debugger;
         //Get our contents from the editor...
         const JSONPayload = DebugUI.GetEditorJSON();
 
         if (JSONPayload) {
-            ServerAPI.Fetch(JSONPayload)
+            DebugUI.Fetch(JSONPayload)
                 .then(data => {
-                    var dispHTML;
 
-                    if (data.debug) {
-                        dispHTML = 'DBUG:' + JSON.stringify(data.debug) +
-                            '<hr>';
-                    }
+
+
 
                     if (data.err) {
 
@@ -323,23 +270,29 @@ const DebugUI = {
                             title: "Error runing the service",
                             body: `
                             <div>Please report this to support!</div>
-                            <b>Error Message</b>:${JSON.stringify(data.err)}
-                            <br>
-                            <b><i>OK then?</i></b>
+                            <b>Error Message</b> : ${data.err}
                             `
                         });
 
 
-                        dispHTML += "<b>Error Message</b>:" + JSON.stringify(data.err);
-                        APIDebugResults.innerHTML = dispHTML;
+                        // dispHTML += "<b>Error Message</b>:" + JSON.stringify(data.err);
 
-                    } else {
-
-                        dispHTML += 'RESULT:' +
-                            JSON.stringify(data);
-                        APIDebugResults.innerHTML = dispHTML;
 
                     }
+
+                
+
+
+                    UIHelper.AceDisplayRsults.setValue(JSON.stringify(data, null, "\t"));
+
+                    //Set the cursor so the user can start over again...
+                    UIHelper.AceDisplayRsults.moveCursorTo(0);
+              
+
+
+
+ 
+
 
 
                 }) // JSON-string from `response.json()` call
@@ -528,23 +481,30 @@ const UIHelper = {
 window.onload = function () {
 
 
+    function SetupAceEditor(ParentHTMLTagID) {
 
-    //Ace Editor is awesome! 
-    UIHelper.AceEditor = ace.edit("PayloadEditor");
+        //Ace Editor is awesome! 
+        var aceEditor = ace.edit(ParentHTMLTagID);
 
-    // Go here for more options... https://github.com/ajaxorg/ace/wiki/Configuring-Ace
-    UIHelper.AceEditor.setOption("mode", "ace/mode/json");
-    UIHelper.AceEditor.setOption("autoScrollEditorIntoView", true);
-    UIHelper.AceEditor.setOption("showPrintMargin", false);
-    UIHelper.AceEditor.setOption("fontSize", 15);
-    UIHelper.AceEditor.$blockScrolling = Infinity;
+        // Go here for more options... https://github.com/ajaxorg/ace/wiki/Configuring-Ace
+        aceEditor.setOption("mode", "ace/mode/json");
+        aceEditor.setOption("autoScrollEditorIntoView", true);
+        aceEditor.setOption("showPrintMargin", false);
+        aceEditor.setOption("fontSize", 15);
+        aceEditor.$blockScrolling = Infinity;
+
+        return aceEditor;
+    }
+    UIHelper.AceEditor = SetupAceEditor('PayloadEditor');
+    UIHelper.AceDisplayRsults = SetupAceEditor('APIDebugResults');
+
 
 
 
     //Setup our UI parts...
-    DebugUI.SetHelpTable();
     DebugUI.SetSysInfo();
     DebugUI.FillSideBar();
+    // DebugUI.SetHelpTable();
 
 
     console.info('The API Client has loaded.Feel free to explore this object in the console.');
@@ -562,8 +522,8 @@ window.onload = function () {
 
 
     //Which screen do you want to show first? Are you debugging the debugger? lol
-    UIHelper.ShowTab('TabMain');
-    // UIHelper.ShowTab('TabDebugger');
+    // UIHelper.ShowTab('TabMain');
+    UIHelper.ShowTab('TabDebugger');
 
 
 

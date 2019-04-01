@@ -1,46 +1,11 @@
 {
     "data": {
-        "sample": {
-            "service": "data", 
-            "view":"Can be (AllAssets,TableTotals, or test)"
-        },
-        "test": [
-            {
-                "text": "Get All Assets (SQL)",
-                "cmd": "ServerAPI.TEST.GetAllAssets();",
-                "title": "Use MySQL to get data..."
-            },
-            {
-                "text": "Get DB Stats (SQL)",
-                "cmd": "ServerAPI.TEST.GetDBStats();",
-                "title": "Gets the totals for tables..."
-            } 
-        ],
         "notes": "Get data from the MySQL server..."
     },
-    "help": {
-        "sample": {
-            "service": "help",
-            "topic":"The help topic your interested in. Can be anything right now. :-("
-        },        
-        "test": [
-            {
-                "text": "Get Basic Help",
-                "cmd": "ServerAPI.GetHelp();",
-                "title": "An example of the API documenting itself."
-            },
-            {
-                "text": "Help on listing assests",
-                "cmd": "ServerAPI.GetHelp('listing assests');",
-                "title": "Of course the help needs lots of work! :-)"
-            }
-        ],
+    "help": {        
         "notes": "Help on help to help you....  lol"
     },
-    "default": {
-        "sample": {
-            "service": "The name of the service you want to use.."
-        },         
+    "default": {        
         "notes": "Example to use as a template for your next service."
     }
 }
