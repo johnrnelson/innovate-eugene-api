@@ -24,16 +24,14 @@ TopNav {
 
 MainTabDisplay {
     display: none;
-    overflow: auto;
+    overflow: hidden;
     position: absolute;
     top: 60px;
     bottom: 0;
     left: 0;
     right: 0
 }
-
-
-
+ 
 
 
 /* The debugger section */

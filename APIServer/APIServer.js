@@ -114,6 +114,7 @@ const IPC = {
                                         //  *** SEND THE END RESPONSE!!!!
                                         const debugdata = `
 window.debugdata = {
+    UserInfo:${JSON.stringify(request.User)},
     NodeVersion:"${process.version}",
     port:${IPC.PORT},
     apidata:${API_HELP},
@@ -179,7 +180,7 @@ window.debugdata = {
 
         const querystring = require('querystring');
         const url = require('url');
-        
+
 
         const RequestURLData = url.parse(request.url);
 
@@ -187,7 +188,7 @@ window.debugdata = {
         request.QueryData = querystring.parse(RequestURLData.query);
         request.QueryPath = RequestURLData.pathname;
 
-        
+
 
         //Give the response and easy way out for errors...
         response.SendError = IPC.SendError;
@@ -199,10 +200,15 @@ window.debugdata = {
 
         //Default to a basic profile. Upgrade later if you get more infor about the connection...
         request.User = {
+            //Using an API key or what???
+            isAuthenticated:false, 
+
             IPAddress: request.headers["x-real-ip"],
             RemoteIP: request.connection.remoteAddress,
             ClientAgent: request.headers["user-agent"],
-            URL: request.url
+            URL: request.url,
+            SecurityLevel: 0,
+            ProfileID: 0
         };
 
 
@@ -221,7 +227,7 @@ window.debugdata = {
 
 
             request.on('end', function () {
-                if (body == '') {                  
+                if (body == '') {
                     IPC.ServeDebugAPP(request, response);
                 }
                 else {

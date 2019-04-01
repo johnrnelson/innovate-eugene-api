@@ -1,10 +1,16 @@
 {
 	"service": "data",
-	"view": "AllAssets-Search",
-	"query":{
-		"AName":{
-			"operator":"=",
-			"value":"My Test Record"
-		}
-	}
+	"view": "AllAssets",
+	"query": [
+		{
+			"Field": "AName",
+			"operator": "=",
+			"value": "My Test Record"
+		},
+		{
+			"Field": "AName",
+			"operator": "=",
+			"value": "Something else Record"
+		}		
+	]
 }

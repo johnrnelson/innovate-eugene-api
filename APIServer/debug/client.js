@@ -1,15 +1,13 @@
 /*
-    Simple wrapper to test the API.
+    Simple wrapper to test the API using the browser.
 
     Adding in whatever you can to help the user actually use the API!
-
 */
 
 
 
 const ServerAPI = {
-
-
+    
     //Quick and easy way to get data from our api...
     Fetch(data = {}) {
         const url = document.URL + 'api/';
@@ -28,104 +26,7 @@ const ServerAPI = {
             body: JSON.stringify(data), // body data type must match "Content-Type" header
         }).then(response => response.json()); // parses JSON response into native Javascript objects 
 
-    },
-
-    GetHelp(Topic) {
-
-        ServerAPI.Fetch({
-            service: 'help',
-            data: {
-                topic: Topic
-            }
-        })
-            .then(data => {
-                console.log('This is the help data...', data);
-            }) // JSON-string from `response.json()` call
-            .catch(error => {
-                console.error(error);
-                debugger;
-            });
-
-    },
-
-    GetDataFolder(Topic) {
-
-        ServerAPI.Fetch({
-            service: 'dbfolder',
-            data: {
-                file: 'MasterMap'
-            }
-        })
-            .then(data => {
-                console.log('This is the assets data...', data);
-            }) // JSON-string from `response.json()` call
-            .catch(error => {
-                console.error(error);
-                debugger;
-            });
-
-    },
-    GetData(OptionsConfig) {
-        if (!OptionsConfig) {
-            //Put in a default if they are just playing around...
-            OptionsConfig = {
-                data: {
-                    view: 'test'
-                }
-            };
-        }
-        OptionsConfig.service = "data";
-
-        ServerAPI.Fetch(OptionsConfig)
-            .then(data => {
-                if (OptionsConfig.OnData) {
-                    OptionsConfig.OnData(null, data);
-                }
-                // console.log('MySQL Data:', data);
-            }) // JSON-string from `response.json()` call
-            .catch(error => {
-                // console.error(error);
-                debugger;
-                if (OptionsConfig.OnData) {
-                    OptionsConfig.OnData(error, null);
-                }
-            });
-
-    },
-    TEST: {
-        GetAllAssets() {
-            ServerAPI.GetData({
-                view: 'AllAssets',
-                OnData: function (err, AllData) {
-                    if (err) {
-                        console.warn('Error in API!', err);
-                    } else {
-                        console.log('All Assets via SQL!');
-                        console.log(AllData);
-                        DebugUI.DisplayTestingResults.innerHTML = JSON.stringify(AllData);
-
-                    }
-
-                }
-            });
-        },
-        GetDBStats() {
-            ServerAPI.GetData({
-                view: 'TableTotals',
-                OnData: function (err, AllData) {
-                    if (err) {
-                        console.warn('Error in API!', err);
-                    } else {
-                        console.log('Database stats...!');
-                        console.log(AllData);
-                    }
-
-                }
-            });
-        }
-
-    }
-
+    } 
 };
 
 const DebugUI = {
@@ -133,12 +34,12 @@ const DebugUI = {
     //Build an HTML table with all the api help.. 
     SetHelpTable() {
         DebugUI.DisplayTestingActions = document.getElementById("DisplayTestingActions");
-        DebugUI.DisplayTestingResults = document.getElementById("DisplayTestingResults");
-        DebugUI.DisplayTestingHelp = document.getElementById("DisplayTestingHelp");
+        // DebugUI.DisplayTestingResults = document.getElementById("DisplayTestingResults");
+        // DebugUI.DisplayTestingHelp = document.getElementById("DisplayTestingHelp");
 
 
-        DebugUI.DisplayTestingResults.innerHTML = "Ready to display testing results!"
-        DebugUI.DisplayTestingHelp.innerHTML = "Ready to display dynamic api help..."
+        // DebugUI.DisplayTestingResults.innerHTML = "Ready to display testing results!"
+        // DebugUI.DisplayTestingHelp.innerHTML = "Ready to display dynamic api help..."
 
 
         //Clear any old stuff...
@@ -171,7 +72,7 @@ const DebugUI = {
                 TestActionColA.innerHTML = test.text;
                 TestActionColB.innerHTML = test.title;
 
-                TestActionColA.className = "buttonclick";
+                // TestActionColA.className = "buttonclick";
 
                 //Let children reference the test record....
                 TestActionRow.DataRecord = test;
@@ -181,19 +82,19 @@ const DebugUI = {
                 TestActionColB.RowElement = TestActionRow;
 
 
-                //User clicked on me!!!! ??
-                TestActionColA.onclick = function () {
-                    // console.log(this.RowElement);
-                    // debugger;
-                    console.log(this.RowElement.DataRecord);
-                    try {
-                        window.eval(this.RowElement.DataRecord.cmd);
-                    } catch (errEval) {
-                        console.warn('Bad Eval!', errEval);
-                        debugger;
+                // //User clicked on me!!!! ??
+                // TestActionColA.onclick = function () {
+                //     // console.log(this.RowElement);
+                //     // debugger;
+                //     console.log(this.RowElement.DataRecord);
+                //     try {
+                //         window.eval(this.RowElement.DataRecord.cmd);
+                //     } catch (errEval) {
+                //         console.warn('Bad Eval!', errEval);
+                //         debugger;
 
-                    }
-                }
+                //     }
+                // }
 
                 TestActionRow.appendChild(TestActionColA);
                 TestActionRow.appendChild(TestActionColB);
@@ -231,15 +132,25 @@ const DebugUI = {
             SystemInfo.appendChild(NewEL);
         }
 
-        AddInfoElement('Start Date', 'The date the server started', debugdata.ST.toLocaleDateString() + " " + debugdata.ST.toLocaleTimeString());
 
-        AddInfoElement('Port', 'APIServer TCP/IP Port', debugdata.port);
+        //You are user!!!
+        console.log(debugdata.UserInfo);
 
-        AddInfoElement('Host', 'The hostname of this server',
-            '' + window.location.hostname + '');
+        if (debugdata.UserInfo.isAuthenticated) {
+            AddInfoElement('Security Level', 'Level of permissions on the server', debugdata.UserInfo.SecurityLevel);
+        } else {
+            AddInfoElement('Security Status', 'Your current user status from the servers perspective.', 'Not Authenticated');
+
+        }
+
+
+        AddInfoElement('Host:Port', 'The hostname and port the server is using for the API',
+            '' + window.location.hostname + ':' + debugdata.port);
 
         AddInfoElement('NodeVersion', 'The version of node on this server',
             debugdata.NodeVersion);
+        AddInfoElement('Start Date', 'The date the server started', debugdata.ST.toLocaleDateString() + " " + debugdata.ST.toLocaleTimeString());
+
 
     },
     /*
@@ -333,11 +244,6 @@ const DebugUI = {
 
 
 
-
-
-
-
-
         var apidataCntr = 0;
         for (var n in debugdata.apidata) {
             //We don't add the default here!
@@ -369,7 +275,21 @@ const DebugUI = {
 
 
     },
-    OpenDialog() {
+    OpenDialog(DialogInfo) {
+        // debugger;
+
+
+
+        const modalWindow = document.querySelector('#mastermodal');
+        const modalWindowTitle = modalWindow.querySelector('.modal-title');
+        const modalWindowBody = modalWindow.querySelector('.modal-body');
+
+        modalWindowTitle.innerHTML = DialogInfo.title;
+        modalWindowBody.innerHTML = DialogInfo.body;
+
+        $('#mastermodal').modal({
+            show: true
+        });
 
     },
     RunDebug() {
@@ -389,9 +309,38 @@ const DebugUI = {
         if (JSONPayload) {
             ServerAPI.Fetch(JSONPayload)
                 .then(data => {
-                    console.log('Debug Data:', data);
+                    var dispHTML;
 
-                    APIDebugResults.innerHTML = JSON.stringify(data);
+                    if (data.debug) {
+                        dispHTML = 'DBUG:' + JSON.stringify(data.debug) +
+                            '<hr>';
+                    }
+
+                    if (data.err) {
+
+
+                        DebugUI.OpenDialog({
+                            title: "Error runing the service",
+                            body: `
+                            <div>Please report this to support!</div>
+                            <b>Error Message</b>:${JSON.stringify(data.err)}
+                            <br>
+                            <b><i>OK then?</i></b>
+                            `
+                        });
+
+
+                        dispHTML += "<b>Error Message</b>:" + JSON.stringify(data.err);
+                        APIDebugResults.innerHTML = dispHTML;
+
+                    } else {
+
+                        dispHTML += 'RESULT:' +
+                            JSON.stringify(data);
+                        APIDebugResults.innerHTML = dispHTML;
+
+                    }
+
 
                 }) // JSON-string from `response.json()` call
                 .catch(error => {
@@ -406,21 +355,31 @@ const DebugUI = {
         Toggle the result panel if we are too lazy to check out the 
         window console. lol  :-)
     */
-    ToggleResult(ShowFlag){
-        debugger;
+    ToggleResult(ShowFlag) {
+
         const APIDebugResultsElement = document.getElementById("APIDebugResults");
-        const AceEditorElement = document.getElementById("editor");
-        debugger;
-        if (APIDebugResultsElement.style.display){
-            console.info(AceEditorElement.style.display)
-        }else{
+        const AceEditorElement = document.getElementById("PayloadEditor");
 
+        //Toggle if no falg defined!
+        if (!ShowFlag) {
+            if (APIDebugResultsElement.style.display == "none") {
+                ShowFlag = true;
+            } else {
+                ShowFlag = false;
+            }
         }
-        console.log(ShowFlag);
 
+        if (ShowFlag) {
+            APIDebugResultsElement.style.display = "";
+            AceEditorElement.style.bottom = "200px";
+        } else {
+            APIDebugResultsElement.style.display = "none";
+            AceEditorElement.style.bottom = "0";
+        }
+
+        //Make sure the Ace editor knows it's been resized...
+        UIHelper.AceEditor.resize();
     },
-
-
 
 
     GetEditorJSON() {
@@ -463,12 +422,14 @@ const DebugUI = {
             'curl': function () {
 
                 return {
+                    title: 'Command line "curl"',
                     code: `curl --request GET --data '${JSON.stringify(JSONPayload)}' ${window.location.href}`,
                     help: 'Check out the man page for curl for more information.',
                 }
             },
             'javascript-fetch': function () {
                 return {
+                    title: 'Browser javascript',
                     code: `
                 const url = document.URL + 'api/';<br>
                 <br>
@@ -495,12 +456,14 @@ const DebugUI = {
             },
             'javascript-http-request': function () {
                 return {
+                    title: 'NodeJS HTTP Request',
                     code: `** SAMPLE CODE for npm "request" **`,
                     help: 'There are many ways to use request objects in Node.',
                 }
             },
             'python 3': function () {
                 return {
+                    title: 'Python 3 Example',
                     code: `No Python experts helping us out with this?
 <br>
 Any Help at all?
@@ -521,26 +484,16 @@ Any Help at all?
             console.warn('somebody update something? Did you check git for the latest code? TypeOfCode"' + TypeOfCode + '" not found!');
         } else {
 
-            const modalWindow = document.querySelector('#mastermodal');
-            const modalWindowTitle = modalWindow.querySelector('.modal-title');
-            const modalWindowBody = modalWindow.querySelector('.modal-body');
-
-            modalWindowTitle.innerHTML = "Client Example Code";
-
-            modalWindowBody.SampleCode = `<pre><code>${active_lang.code}</code></pre>`;
-
-
-
-            modalWindowBody.innerHTML = `
+            DebugUI.OpenDialog({
+                title: active_lang.title,
+                body: `
                 <div>Please help us improve this!</div>
-                ${modalWindowBody.SampleCode}
+                <pre><code>${active_lang.code}</code></pre>
                 <br>
-                ${active_lang.help}
-                `;
-
-            $('#mastermodal').modal({
-                show: true
+                <b><i>${active_lang.help}</i></b>
+                `
             });
+
 
         }//End if right type of code...
     }
@@ -574,8 +527,10 @@ const UIHelper = {
 */
 window.onload = function () {
 
+
+
     //Ace Editor is awesome! 
-    UIHelper.AceEditor = ace.edit("editor");
+    UIHelper.AceEditor = ace.edit("PayloadEditor");
 
     // Go here for more options... https://github.com/ajaxorg/ace/wiki/Configuring-Ace
     UIHelper.AceEditor.setOption("mode", "ace/mode/json");
@@ -584,11 +539,12 @@ window.onload = function () {
     UIHelper.AceEditor.setOption("fontSize", 15);
     UIHelper.AceEditor.$blockScrolling = Infinity;
 
+
+
     //Setup our UI parts...
     DebugUI.SetHelpTable();
     DebugUI.SetSysInfo();
     DebugUI.FillSideBar();
-
 
 
     console.info('The API Client has loaded.Feel free to explore this object in the console.');
@@ -606,8 +562,8 @@ window.onload = function () {
 
 
     //Which screen do you want to show first? Are you debugging the debugger? lol
-    // UIHelper.ShowTab('TabMain');
-    UIHelper.ShowTab('TabDebugger');
+    UIHelper.ShowTab('TabMain');
+    // UIHelper.ShowTab('TabDebugger');
 
 
 
