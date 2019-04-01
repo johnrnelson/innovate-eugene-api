@@ -7,7 +7,7 @@
 
 
 const ServerAPI = {
-    
+
     //Quick and easy way to get data from our api...
     Fetch(data = {}) {
         const url = document.URL + 'api/';
@@ -134,7 +134,7 @@ const DebugUI = {
 
 
         //You are user!!!
-        console.log(debugdata.UserInfo);
+        // console.log(debugdata.UserInfo);
 
         if (debugdata.UserInfo.isAuthenticated) {
             AddInfoElement('Security Level', 'Level of permissions on the server', debugdata.UserInfo.SecurityLevel);
