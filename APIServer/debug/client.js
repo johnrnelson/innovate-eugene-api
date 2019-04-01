@@ -199,6 +199,12 @@ const DebugUI = {
 
                     //Set the cursor so the user can start over again...
                     UIHelper.AceEditor.moveCursorTo(0);
+
+
+                    UIHelper.AceDisplayRsults.setValue("{}");
+
+                    //Set the cursor so the user can start over again...
+                    UIHelper.AceDisplayRsults.moveCursorTo(0);                    
                 }
 
 
@@ -262,23 +268,17 @@ const DebugUI = {
 
 
 
-
+                    /*
                     if (data.err) {
-
-
                         DebugUI.OpenDialog({
                             title: "Error runing the service",
                             body: `
                             <div>Please report this to support!</div>
                             <b>Error Message</b> : ${data.err}
                             `
-                        });
-
-
-                        // dispHTML += "<b>Error Message</b>:" + JSON.stringify(data.err);
-
-
+                        }); 
                     }
+                    */
 
                 
 
@@ -384,24 +384,25 @@ const DebugUI = {
                 return {
                     title: 'Browser javascript',
                     code: `
-                const url = document.URL + 'api/';<br>
-                <br>
-                <br>
-                return fetch(url, {<br>
-                    method: "PUT", // *GET, POST, PUT, DELETE, etc.<br>
-                    mode: "cors", // no-cors, cors, *same-origin<br>
-                    cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached<br>
-                    credentials: "same-origin", // include, *same-origin, omit<br>
-                    <br>
-                    <br>
-                    headers: {<br>
-                        "Content-Type": "application/json",<br>
-                    },<br>
-                    redirect: "follow", // manual, *follow, error<br>
-                    referrer: "no-referrer", // no-referrer, *client<br>
-                    body: JSON.stringify(data), // body data type must match "Content-Type" header<br>
-                }).then(response => response.json()); // parses JSON response into native Javascript objects<br>
-                <br>
+                const url = '${document.URL}api/'; 
+            
+                fetch(url, {
+                    method: "PUT", // *GET, POST, PUT, DELETE, etc.
+                    mode: "cors", // no-cors, cors, *same-origin
+                    cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+                    credentials: "same-origin", // include, *same-origin, omit
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    redirect: "follow", // manual, *follow, error
+                    referrer: "no-referrer", // no-referrer, *client
+                    body: JSON.stringify(${JSON.stringify(JSONPayload)}), // body data type must match "Content-Type" header
+                }).then(response => response.json()).then(JSON => {
+                    console.info('This is the result of the request!');
+                    console.log(JSON);
+                    debugger;
+                }); // parses JSON response into native Javascript objects 
+                 
                 
                 `,
                     help: 'You can use xhr but I guess fetch is the new thing.',
@@ -441,7 +442,7 @@ Any Help at all?
                 title: active_lang.title,
                 body: `
                 <div>Please help us improve this!</div>
-                <pre><code>${active_lang.code}</code></pre>
+                <pre><code>${active_lang.code.replace(/\n/g,'<br>')}</code></pre>
                 <br>
                 <b><i>${active_lang.help}</i></b>
                 `
