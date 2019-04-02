@@ -158,7 +158,7 @@ window.debugdata = {
             ResponseObject.end(JSON.stringify(ErrorInformation));
         }
     },
-    
+
     /*
         This is the actual method called when a request comes from the server. 
         
@@ -265,7 +265,19 @@ window.debugdata = {
                         const finalServicePath = path.resolve(path.join(__dirname, "services", path.normalize(path.join(servicePath, 'index.js'))));
 
                         const route2Take = require(finalServicePath);
+
+
+
+
+                        //Insert dagger here!!!!
                         route2Take.ServiceRequest(request, response);
+
+
+
+
+
+
+                        
                     }
                     catch (errEndReq) {
 
