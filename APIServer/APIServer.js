@@ -7,10 +7,8 @@
 /*
     Main entry point for the "/api" proxy app.
 
-    http://127.0.0.1:9118
-
-
- 
+    Keep it as simple as possible. Think before
+    you "npm install" anything! Please! lol  :-)  
 */
 
 
@@ -46,7 +44,6 @@ const IPC = {
         The easier you make this code the less headaches your gonna have debugging. :-)
     */
     Start: function () {
-
         var http = require('http');
         var server = http.createServer(function (requset, response) {
             IPC.ServiceWeb(requset, response);
@@ -155,14 +152,13 @@ window.debugdata = {
         the data back to the cient as json...
     */
     SendError(ResponseObject, ErrorInformation) {
-        // debugger;
         if (typeof (ErrorInformation) == "string") {
             ResponseObject.end(ErrorInformation);
         } else {
             ResponseObject.end(JSON.stringify(ErrorInformation));
         }
-
     },
+    
     /*
         This is the actual method called when a request comes from the server. 
         
@@ -203,8 +199,11 @@ window.debugdata = {
             //Using an API key or what???
             isAuthenticated:false, 
 
+            //The proxy (nginx) will supply this as a header not the client!!!
             IPAddress: request.headers["x-real-ip"],
+            
             RemoteIP: request.connection.remoteAddress,
+            
             ClientAgent: request.headers["user-agent"],
             URL: request.url,
             SecurityLevel: 0,

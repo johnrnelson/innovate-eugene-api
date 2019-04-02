@@ -37,6 +37,7 @@ MainTabDisplay {
 /* The debugger section */
 
 .ace-editor {
+    border:solid 2px silver;
     /* display:none; */
     position: absolute;
     top: 0;
@@ -46,6 +47,7 @@ MainTabDisplay {
 }
 
 .APIDebugResults {
+    border:solid 2px silver;
     position: absolute;
     /* top: 0; */
     height: 300px;

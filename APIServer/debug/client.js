@@ -29,8 +29,7 @@ const DebugUI = {
     /*
         The rest is just setting up the UI for the user...
     */
-
-
+   
     //Build an HTML table with all the api help.. 
     SetHelpTable(DisplayHTMLELement) {
         DebugUI.DisplayTestingActions = document.getElementById(DisplayHTMLELement);
@@ -134,9 +133,8 @@ const DebugUI = {
 
         //When the user selects something different...
         DebugVerbList.onchange = function () {
+
             const SelOpt = this.selectedOptions[0];
-
-
 
             //Quick clear the old stuff...
             ExampleCodeList.innerHTML = "";
@@ -503,9 +501,7 @@ window.onload = function () {
     // debugger;
 
     var langTools = ace.require("ace/ext/language_tools");
-    // var editor = ace.edit("editor");
-
-    // uses http://rhymebrain.com/api.html
+ 
     var rhymeCompleter = {
         getCompletions: (editor, session, caretPosition2d, prefix, callback) => {
 
@@ -572,27 +568,10 @@ window.onload = function () {
 
 
     //Which screen do you want to show first? Are you debugging the debugger? lol
-    UIHelper.ShowTab('TabMain');
-    // UIHelper.ShowTab('TabDebugger');
-
-
-
-
+    // UIHelper.ShowTab('TabMain');
+    UIHelper.ShowTab('TabDebugger');
 
  
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

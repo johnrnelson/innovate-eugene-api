@@ -4,7 +4,7 @@
 */
 const MySQLDataModel = {
     test(Result, Request, Response) {
-        const SQL = "SELECT * FROM `asset-inventory`.AllAssets limit 50;";
+        const SQL = "SELECT 5;";
         SERVER.SqlData.ExecuteSQL(SQL, function (SQLResult) {
             if (SQLResult.err) {
                 Result.err = SQLResult.err.message;
