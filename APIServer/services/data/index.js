@@ -3,7 +3,7 @@
     
 */
 const MySQLDataModel = {
-    test(Result, Request, Response) {
+    test(Result, RequestData, OnComplete) {
         const SQL = "SELECT 5;";
         SERVER.SqlData.ExecuteSQL(SQL, function (SQLResult) {
             if (SQLResult.err) {
@@ -12,10 +12,10 @@ const MySQLDataModel = {
             } else {
                 Result.data = SQLResult.rows;
             }
-            Response.end(JSON.stringify(Result));
+            OnComplete(null,Result);
         });
     },
-    AllAssets(Result, Request, Response) {
+    AllAssets(Result, RequestData, OnComplete) {
         const SQL = "SELECT * FROM `asset-inventory`.AllAssets limit 30;";
         SERVER.SqlData.ExecuteSQL(SQL, function (SQLResult) {
             if (SQLResult.err) {
@@ -24,10 +24,10 @@ const MySQLDataModel = {
             } else {
                 Result.data = SQLResult.rows;
             }
-            Response.end(JSON.stringify(Result));
+            OnComplete(null,Result);
         });
     },
-    TableTotals(Result, Request, Response) {
+    TableTotals(Result, RequestData, OnComplete) {
         const SQL = "SELECT count(*) TotalAssets FROM `asset-inventory`.AllAssets limit 30;";
         SERVER.SqlData.ExecuteSQL(SQL, function (SQLResult) {
             if (SQLResult.err) {
@@ -36,13 +36,13 @@ const MySQLDataModel = {
             } else {
                 Result.data = SQLResult.rows;
             }
-            Response.end(JSON.stringify(Result));
+            OnComplete(null,Result);
         });
     }
 };
 
 //Change this!!!
-function ServiceRequest(request, response) {
+function ServiceRequest(request, OnComplete) {
 
     /*
         Now if your chance to setup a default record for this service...
@@ -62,20 +62,20 @@ function ServiceRequest(request, response) {
 
 
     if (!request.RequestData.view) {
-        response.end(JSON.stringify({
-            err: 'No View!'
-        }));
+        OnComplete('No database view!', null);        
         return;
     }
 
     //See if we can support the view requested from the client....
     const modelViewService = MySQLDataModel[request.RequestData.view];
     if (!modelViewService) {
-        response.end(JSON.stringify({
-            err: 'View "' + request.RequestData.view + '" Not Found!'
-        }));
+        OnComplete('View "' + request.RequestData.view + '" Not Found!', null);
+
     } else {
-        modelViewService(result, request, response);
+
+        const reqData = request.RequestData;
+
+        modelViewService(result, reqData, OnComplete);
     }
 
 

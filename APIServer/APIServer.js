@@ -160,6 +160,45 @@ window.debugdata = {
     },
 
     /*
+        Actually run the code needed to service the request! There may be 
+        multiple requests so just do your part and call back when finished...
+    */
+    ServiceRequest(request, response, OnComplete) {
+
+
+        // We need at least a service name to work with...
+        if (!request.RequestData.service) {
+            OnComplete('No service defined!', null)
+
+        } else {
+
+            var finalServicePath = "";
+
+            try {
+                //Do not allow ".." in the path!!!!
+                const servicePath = request.RequestData.service.replace(/\./g, '');
+
+                finalServicePath = path.resolve(path.join(__dirname, "services", path.normalize(path.join(servicePath, 'index.js'))));
+
+                const route2Take = require(finalServicePath);
+
+                //Insert dagger here!!!!
+                route2Take.ServiceRequest(request, function (ServiceError, ResponseJSON) {
+                    OnComplete(ServiceError, ResponseJSON);
+
+                });
+            } catch (errinService) {
+                response.end(JSON.stringify({
+                    err: errinService.message
+                }));
+            }
+
+        }
+
+
+    },
+
+    /*
         This is the actual method called when a request comes from the server. 
         
         Use this chance to build state and enforce rules that you expect all 
@@ -197,13 +236,13 @@ window.debugdata = {
         //Default to a basic profile. Upgrade later if you get more infor about the connection...
         request.User = {
             //Using an API key or what???
-            isAuthenticated:false, 
+            isAuthenticated: false,
 
             //The proxy (nginx) will supply this as a header not the client!!!
             IPAddress: request.headers["x-real-ip"],
-            
+
             RemoteIP: request.connection.remoteAddress,
-            
+
             ClientAgent: request.headers["user-agent"],
             URL: request.url,
             SecurityLevel: 0,
@@ -250,48 +289,44 @@ window.debugdata = {
 
                         }
 
-                        // We need at least a service name to work with...
-                        if (!request.RequestData.service) {
+
+                        //Is this an object or an array of object?
+                        if (request.RequestData.length) {
                             response.end(JSON.stringify({
-                                err: 'No service defined!'
+                                err: 'Multi Service Ready!'
                             }));
                             return;
+                        } else {
+
                         }
 
 
-                        //Do not allow ".." in the path!!!!
-                        const servicePath = request.RequestData.service.replace(/\./g, '');
-
-                        const finalServicePath = path.resolve(path.join(__dirname, "services", path.normalize(path.join(servicePath, 'index.js'))));
-
-                        const route2Take = require(finalServicePath);
 
 
 
+                        //By the time you get here.. you want a true web api request...
+                        IPC.ServiceRequest(request, response, function (ServiceError, ResponseJSON) {
+                            if (ServiceError) {
+                                response.SendError(response, ServiceError);
+                            } else {
+                                response.end(JSON.stringify(ResponseJSON));
+                            }
+                        });
 
-                        //Insert dagger here!!!!
-                        route2Take.ServiceRequest(request, response);
-
-
-
-
-
-
-                        
                     }
                     catch (errEndReq) {
-
-
-                        //Give the client some idea of what went wrong...
-                        var resp = {
-                            msg: 'Error in request!',
-                            err: errEndReq
-                        };
                         // console.log("REQUEST ERROR!");
                         // console.log("URL", request.url);
                         // console.log(errEndReq.message);
                         // console.log(body);
                         // debugger;
+
+                        //Give the client some idea of what went wrong...
+                        var resp = {
+                            msg: 'Error in request!',
+                            err: errEndReq.message
+                        };
+
                         response.end(JSON.stringify(resp));
                     }
                 }
@@ -300,7 +335,7 @@ window.debugdata = {
         catch (errPUT) {
             //Some bad juju happend so we just pass it off to our generic error handler...
             response.SendError(response, {
-                err: errPUT
+                err: errPUT.message
             });
         }//End Reading Request... 
 

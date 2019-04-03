@@ -1,6 +1,6 @@
 const topics = {
     //Get a list of sample files to work with....
-    'sample-code-list': function (request, response) {
+    'sample-code-list': function (request, OnComplete) {
 
         const reqData = request.RequestData.data;
 
@@ -10,7 +10,7 @@ const topics = {
 
         const fs = require('fs');
         const path = require('path');
- 
+
 
         // const examplesFolder = path.resolve(path.join(SERVER.RootFolder, "services",
         //     path.normalize(path.join('data', 'examples'))));
@@ -29,18 +29,15 @@ const topics = {
                 const sampleFiles = [];
 
                 for (var i = 0; i < items.length; i++) {
-                    // var debugFilePath = examplesFolder + '/' + items[i];
+                   
                     var stripFileName = items[i].replace('.json', '');
-
-                    // console.log("Start: " + debugFilePath);
+ 
                     sampleFiles.push(stripFileName);
                 }
 
-                //go through the selected service examples and get what they want...
-                response.end(JSON.stringify({
+                OnComplete(null,{
                     samples: sampleFiles
-                }));
-
+                }); 
             }
 
 
@@ -48,20 +45,20 @@ const topics = {
 
     },
     //get the actual sample file...
-    'sample-code-fetch': function (request, response) {
+    'sample-code-fetch': function (request, OnComplete) {
         const reqData = request.RequestData.data;
 
         const sampleid = reqData.sampleid.replace(/\./g, '');
-    
+
         const targetService = reqData["target-service"].replace(/\./g, '');
 
         // console.log(sampleid, targetService);
 
         const fs = require('fs');
-        const path = require('path'); 
+        const path = require('path');
 
         const examplesFilePath = path.join(SERVER.RootFolder, "services", targetService, "examples", sampleid + ".json");
- 
+
 
 
         fs.readFile(examplesFilePath, 'utf8', function (err, data) {
@@ -75,10 +72,14 @@ const topics = {
                     err: err.message,
                 }));
             } else {
-                response.end(JSON.stringify({
+                OnComplete(null,{
                     msg: "Have fun with this code!",
                     code: JSON.parse(data),
-                }));
+                });
+                // response.end(JSON.stringify({
+                //     msg: "Have fun with this code!",
+                //     code: JSON.parse(data),
+                // }));
             }
 
 
@@ -91,7 +92,7 @@ const topics = {
 
 
 //Change this!!!
-function ServiceRequest(request, response) {
+function ServiceRequest(request,  OnComplete) {
 
 
     // debugger;
@@ -103,35 +104,23 @@ function ServiceRequest(request, response) {
 
         if (!reqData.topic) {
 
-            response.SendError(response, {
-                err: 'Please supply a topic!'
-            });
+            OnComplete('Please supply a topic!', null);
+
 
         } else {
 
             const activeTopic = topics[reqData.topic];
 
             if (!activeTopic) {
+                OnComplete('Ok now write help about this topic <b>' + reqData.topic + '<b>! lol', null);
 
-                response.end(JSON.stringify({
-                    msg: 'Ok now write help about this topic <b>' + reqData.topic + '<b>! lol'
-                }));
             } else {
-                activeTopic(request, response);
+                activeTopic(request, OnComplete);
             }
-
-
         }
-
     }
     catch (errorService) {
-        response.SendError(response, {
-            err: errorService.message
-        });
-
-
-    }
-
-
+        OnComplete(errorService.message, null); 
+    } 
 }
 exports.ServiceRequest = ServiceRequest;
