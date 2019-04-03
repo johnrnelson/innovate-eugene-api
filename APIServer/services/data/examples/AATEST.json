@@ -12,11 +12,8 @@
     {
         "reqID": "TestB",
         "request": {
-            "service": "help",
-            "data": {
-                "topic": "sample-code-list",
-                "sampleid": "data"
-            }
+            "service": "data",
+            "view": "AllAssets"
         }
     }        
 ]

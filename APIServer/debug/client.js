@@ -29,7 +29,7 @@ const DebugUI = {
     /*
         The rest is just setting up the UI for the user...
     */
-   
+
     //Build an HTML table with all the api help.. 
     SetHelpTable(DisplayHTMLELement) {
         DebugUI.DisplayTestingActions = document.getElementById(DisplayHTMLELement);
@@ -164,8 +164,10 @@ const DebugUI = {
 
             }) // JSON-string from `response.json()` call
                 .catch(error => {
+                    console.warn('Error!');
+                    console.warn(data);
                     console.error(error);
-                    debugger;
+                    // debugger;
                 });
 
 
@@ -277,26 +279,20 @@ const DebugUI = {
                         }); 
                     }
                     */
-
-
-
-
+ 
+ 
                     UIHelper.AceDisplayRsults.setValue(JSON.stringify(data, null, "\t"));
 
                     //Set the cursor so the user can start over again...
-                    UIHelper.AceDisplayRsults.moveCursorTo(0);
-
-
-
-
-
+                    UIHelper.AceDisplayRsults.moveCursorTo(0); 
 
 
 
                 }) // JSON-string from `response.json()` call
                 .catch(error => {
+                    console.warn('Error in running the debug!');
                     console.error(error);
-                    debugger;
+                    // debugger;
                 });
         }
 

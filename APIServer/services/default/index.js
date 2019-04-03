@@ -3,12 +3,9 @@
     
 */
 //Change this!!!
-function ServiceRequest(request, response) {
+function ServiceRequest(request, OnComplete) {
 
-    response.end(JSON.stringify({
-        msg: 'Hello there!'
-    }));
-
+    OnComplete(null,'Hello there!');
 
 }
 exports.ServiceRequest = ServiceRequest;

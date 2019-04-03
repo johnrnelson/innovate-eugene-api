@@ -1,10 +1,11 @@
 const topics = {
     //Get a list of sample files to work with....
-    'sample-code-list': function (request, OnComplete) {
+    'sample-code-list': function (RequestData, OnComplete) {
 
-        const reqData = request.RequestData.data;
+        // const RequestData = RequestData.data;
+     
 
-        const sampleid = reqData.sampleid.replace(/\./g, '');
+        const sampleid = RequestData.sampleid.replace(/\./g, '');
 
         // console.log(sampleid);
 
@@ -45,12 +46,12 @@ const topics = {
 
     },
     //get the actual sample file...
-    'sample-code-fetch': function (request, OnComplete) {
-        const reqData = request.RequestData.data;
+    'sample-code-fetch': function (RequestData, OnComplete) {
+        // const RequestData = RequestData.data;
+       
+        const sampleid = RequestData.sampleid.replace(/\./g, '');
 
-        const sampleid = reqData.sampleid.replace(/\./g, '');
-
-        const targetService = reqData["target-service"].replace(/\./g, '');
+        const targetService = RequestData["target-service"].replace(/\./g, '');
 
         // console.log(sampleid, targetService);
 
@@ -64,7 +65,7 @@ const topics = {
         fs.readFile(examplesFilePath, 'utf8', function (err, data) {
             if (err) {
                 debugger;
-                console.log(reqData);
+                console.log(RequestData);
                 console.log(sampleid);
                 console.log(examplesFilePath);
                 response.end(JSON.stringify({
@@ -92,30 +93,30 @@ const topics = {
 
 
 //Change this!!!
-function ServiceRequest(request,  OnComplete) {
+function ServiceRequest(RequestObj,RequestData,  OnComplete) {
 
 
-    // debugger;
+    var RequestData = RequestData.data;
+ 
     try {
 
-        const reqData = request.RequestData.data;
+        
 
 
-
-        if (!reqData.topic) {
+        if (!RequestData.topic) {
 
             OnComplete('Please supply a topic!', null);
 
 
         } else {
 
-            const activeTopic = topics[reqData.topic];
+            const activeTopic = topics[RequestData.topic];
 
             if (!activeTopic) {
-                OnComplete('Ok now write help about this topic <b>' + reqData.topic + '<b>! lol', null);
+                OnComplete('Ok now write help about this topic <b>' + RequestData.topic + '<b>! lol', null);
 
             } else {
-                activeTopic(request, OnComplete);
+                activeTopic(RequestData, OnComplete);
             }
         }
     }

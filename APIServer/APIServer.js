@@ -163,11 +163,11 @@ window.debugdata = {
         Actually run the code needed to service the request! There may be 
         multiple requests so just do your part and call back when finished...
     */
-    ServiceRequest(request, response, OnComplete) {
+    ServiceRequest(RequestObj, RequestData, OnComplete) {
 
 
         // We need at least a service name to work with...
-        if (!request.RequestData.service) {
+        if (!RequestData.service) {
             OnComplete('No service defined!', null)
 
         } else {
@@ -176,21 +176,22 @@ window.debugdata = {
 
             try {
                 //Do not allow ".." in the path!!!!
-                const servicePath = request.RequestData.service.replace(/\./g, '');
+                const servicePath = RequestData.service.replace(/\./g, '');
 
                 finalServicePath = path.resolve(path.join(__dirname, "services", path.normalize(path.join(servicePath, 'index.js'))));
 
                 const route2Take = require(finalServicePath);
 
                 //Insert dagger here!!!!
-                route2Take.ServiceRequest(request, function (ServiceError, ResponseJSON) {
+                route2Take.ServiceRequest(RequestObj, RequestData, function (ServiceError, ResponseJSON) {
                     OnComplete(ServiceError, ResponseJSON);
 
                 });
             } catch (errinService) {
-                response.end(JSON.stringify({
-                    err: errinService.message
-                }));
+                OnComplete(errinService.message, null);
+                // response.end(JSON.stringify({
+                //     err: errinService.message
+                // }));
             }
 
         }
@@ -292,26 +293,57 @@ window.debugdata = {
 
                         //Is this an object or an array of object?
                         if (request.RequestData.length) {
-                            response.end(JSON.stringify({
-                                err: 'Multi Service Ready!'
-                            }));
-                            return;
+                            function FinishedAllRequests() {
+
+                            }
+                            var totalFinished = 0;
+                            const resultObj = {};
+                            for (let index = 0; index < request.RequestData.length; index++) {
+                                const aSingleRequest = request.RequestData[index];
+
+                                //By the time you get here.. you want a true web api request...
+                                IPC.ServiceRequest(request, aSingleRequest.request, function (ServiceError, ResponseJSON) {
+                                    totalFinished++;
+
+
+                                    resultObj[aSingleRequest.reqID] = ResponseJSON;
+
+                                    if (ServiceError) {
+                                        resultObj[aSingleRequest.reqID] = ServiceError
+                                        // reqJSONArray.push(ServiceError);
+                                        // response.SendError(response, ServiceError);
+
+                                    } else {
+                                        resultObj[aSingleRequest.reqID] = ResponseJSON
+                                        // reqJSONArray.push(ResponseJSON);
+
+                                    }
+                                    if (totalFinished == request.RequestData.length) {
+                                        resultObj["Total"] = totalFinished;
+                                        response.end(JSON.stringify(resultObj));
+                                    }
+
+                                });
+
+                            }
+                            // response.end(JSON.stringify({
+                            //     err: 'Multi Service Ready!'
+                            // }));
+                            // return;
                         } else {
 
+                            //By the time you get here.. you want a true web api request...
+                            IPC.ServiceRequest(request, request.RequestData, function (ServiceError, ResponseJSON) {
+                                if (ServiceError) {
+                                    response.SendError(response, ServiceError);
+                                } else {
+                                    const doh = ResponseJSON;
+                                    response.end(JSON.stringify(ResponseJSON));
+                                }
+                            });
                         }
 
 
-
-
-
-                        //By the time you get here.. you want a true web api request...
-                        IPC.ServiceRequest(request, response, function (ServiceError, ResponseJSON) {
-                            if (ServiceError) {
-                                response.SendError(response, ServiceError);
-                            } else {
-                                response.end(JSON.stringify(ResponseJSON));
-                            }
-                        });
 
                     }
                     catch (errEndReq) {

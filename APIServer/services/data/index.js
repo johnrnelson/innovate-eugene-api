@@ -42,7 +42,7 @@ const MySQLDataModel = {
 };
 
 //Change this!!!
-function ServiceRequest(request, OnComplete) {
+function ServiceRequest(RequestObj, RequestData, OnComplete) {
 
     /*
         Now if your chance to setup a default record for this service...
@@ -50,9 +50,9 @@ function ServiceRequest(request, OnComplete) {
     const result = {
         // put what you need in here to help the user debug any issues...
         debug: {
-            User: request.User,
-            QueryData: request.QueryData,
-            QueryPath: request.QueryPath,
+            User: RequestObj.User,
+            QueryData: RequestObj.QueryData,
+            QueryPath: RequestObj.QueryPath,
         }
     };
 
@@ -61,21 +61,20 @@ function ServiceRequest(request, OnComplete) {
     // console.log(request.RequestData);/
 
 
-    if (!request.RequestData.view) {
+    if (!RequestData.view) {
         OnComplete('No database view!', null);        
         return;
     }
 
     //See if we can support the view requested from the client....
-    const modelViewService = MySQLDataModel[request.RequestData.view];
+    const modelViewService = MySQLDataModel[RequestData.view];
     if (!modelViewService) {
-        OnComplete('View "' + request.RequestData.view + '" Not Found!', null);
+        OnComplete('View "' + RequestData.view + '" Not Found!', null);
 
     } else {
+ 
 
-        const reqData = request.RequestData;
-
-        modelViewService(result, reqData, OnComplete);
+        modelViewService(result, RequestData, OnComplete);
     }
 
 
