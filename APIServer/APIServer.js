@@ -152,6 +152,7 @@ window.debugdata = {
         the data back to the cient as json...
     */
     SendError(ResponseObject, ErrorInformation) {
+        //be forgiving by accepting a string or an actual error object!
         if (typeof (ErrorInformation) == "string") {
             ResponseObject.end(JSON.stringify({
                 err: ErrorInformation
