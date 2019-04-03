@@ -153,7 +153,9 @@ window.debugdata = {
     */
     SendError(ResponseObject, ErrorInformation) {
         if (typeof (ErrorInformation) == "string") {
-            ResponseObject.end(ErrorInformation);
+            ResponseObject.end(JSON.stringify({
+                err: ErrorInformation
+            }));
         } else {
             ResponseObject.end(JSON.stringify(ErrorInformation));
         }
@@ -189,9 +191,6 @@ window.debugdata = {
                 });
             } catch (errinService) {
                 OnComplete(errinService.message, null);
-                // response.end(JSON.stringify({
-                //     err: errinService.message
-                // }));
             }
 
         }

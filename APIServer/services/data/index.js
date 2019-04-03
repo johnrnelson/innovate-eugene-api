@@ -71,9 +71,7 @@ function ServiceRequest(RequestObj, RequestData, OnComplete) {
     if (!modelViewService) {
         OnComplete('View "' + RequestData.view + '" Not Found!', null);
 
-    } else {
- 
-
+    } else { 
         modelViewService(result, RequestData, OnComplete);
     }
 
